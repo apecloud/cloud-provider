@@ -7,6 +7,11 @@ module "eks" {
   # override dns suffix for aws china
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
+  cluster_addons = {
+    aws-ebs-csi-driver = {
+      most_recent = true
+    }
+  }
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
@@ -15,6 +20,12 @@ module "eks" {
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
 
+    iam_role_additional_policies = {
+      # for aws global
+      # AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      # for aws china
+      AmazonEBSCSIDriverPolicy = "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+    }
   }
 
   eks_managed_node_groups = {
