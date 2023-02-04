@@ -4,6 +4,9 @@ module "eks" {
 
   cluster_name    = local.cluster_name
   cluster_version = "1.24"
+  # override dns suffix for aws china
+  cluster_iam_role_dns_suffix = "amazonaws.com"
+
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
