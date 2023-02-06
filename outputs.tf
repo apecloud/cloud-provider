@@ -22,3 +22,8 @@ output "cluster_addons" {
   description = "EKS addons"
   value       = module.eks.cluster_addons
 }
+
+output "vpc_available_zones" {
+  description = "VPC available zones"
+  value       = module.vpc.azs
+}

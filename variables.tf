@@ -1,11 +1,12 @@
 variable "region" {
   description = "AWS region"
   type        = string
-  default     = "cn-north-1"
+  default     = ""
 }
 
 variable "available_zones" {
-  description = "available zones"
+  description = "specified available zones"
   type        = list(any)
-  default     = ["cn-north-1a", "cn-north-1b"]
+  default     = []
 }
+

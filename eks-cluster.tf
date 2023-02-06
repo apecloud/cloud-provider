@@ -4,7 +4,6 @@ module "eks" {
 
   cluster_name    = local.cluster_name
   cluster_version = "1.24"
-  # override dns suffix for aws china
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   cluster_addons = {
@@ -21,10 +20,7 @@ module "eks" {
     ami_type = "AL2_x86_64"
 
     iam_role_additional_policies = {
-      # for aws global
-      # AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-      # for aws china
-      AmazonEBSCSIDriverPolicy = "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      AmazonEBSCSIDriverPolicy = (var.region == "cn-north-1") || (var.region == "cn-northwest-1") ? "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
     }
   }
 
