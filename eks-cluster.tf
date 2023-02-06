@@ -50,3 +50,13 @@ module "eks" {
     }
   }
 }
+
+resource "null_resource" "storageclass-patch" {
+  depends_on = [
+    module.eks
+  ]
+
+  provisioner "local-exec" {
+    command = "script/sc-patch.sh ${var.region} ${module.eks.cluster_name}"
+  }
+}
