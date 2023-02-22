@@ -47,7 +47,7 @@ resource "helm_release" "lb_controller" {
 
   set {
     name = "image.repository"
-    value = "${var.image_registry}/amazon/aws-load-balancer-controller"
+    value = "${var.image_registries[data.aws_region.current.name]}/amazon/aws-load-balancer-controller"
   }
 
   values = [
