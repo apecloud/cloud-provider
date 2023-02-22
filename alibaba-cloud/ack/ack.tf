@@ -65,7 +65,7 @@ resource "alicloud_vswitch" "terway_vswitches" {
 # K8s managed
 resource "alicloud_cs_managed_kubernetes" "terway" {
   # K8s name
-  name                      = local.kubernetes_name_terway
+  name                      = local.k8s_name_terway
 
   # ack.standard is free of charge
   # ack.pro.* is in charge
