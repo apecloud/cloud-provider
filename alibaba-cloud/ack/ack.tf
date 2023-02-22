@@ -1,9 +1,7 @@
 #provider, use alicloud
 provider "alicloud" {
-  #access_key = "LTAI5tLhFZ8i85swysrJ8ovi"
-  #secret_key = "WWMyw8UJmaPmHnuKp8RVwOe5OiRYVd"
-  access_key  = "LTAI5tHEmJgyu9MrMaBjC78B"
-  secret_key  = "n2vQBzXg2uiZdLuk1IjNdhnGlGus91"
+  access_key  = ""
+  secret_key  = ""
   region     = "cn-hangzhou"
 }
 
