@@ -1,4 +1,14 @@
 # Policy
+locals {
+  region = data.aws_region.current.name
+  oidc_issuer = split("/", data.aws_eks_cluster.eks.identity[0].oidc[0].issuer)
+  oidc_id = element(local.oidc_issuer, length(local.oidc_issuer) - 1)
+  partition = data.aws_partition.current.partition
+  dns_suffix = data.aws_partition.current.dns_suffix
+  # partition = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "aws-cn" : "aws"
+  # domain_suffix = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "com.cn" : "com"
+}
+
 data "aws_iam_policy_document" "lb_controller" {
   count = var.enabled ? 1 : 0
 
@@ -108,7 +118,7 @@ data "aws_iam_policy_document" "lb_controller" {
     ]
 
     resources = [
-      "arn:${var.arn_format}:ec2:*:*:security-group/*"
+      "arn:${local.partition}:ec2:*:*:security-group/*"
     ]
 
     condition {
@@ -139,7 +149,7 @@ data "aws_iam_policy_document" "lb_controller" {
     ]
 
     resources = [
-      "arn:${var.arn_format}:ec2:*:*:security-group/*"
+      "arn:${local.partition}:ec2:*:*:security-group/*"
     ]
 
     condition {
@@ -228,9 +238,9 @@ data "aws_iam_policy_document" "lb_controller" {
     ]
 
     resources = [
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:targetgroup/*/*",
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:loadbalancer/net/*/*",
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:loadbalancer/app/*/*"
+      "arn:${local.partition}:elasticloadbalancing:*:*:targetgroup/*/*",
+      "arn:${local.partition}:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+      "arn:${local.partition}:elasticloadbalancing:*:*:loadbalancer/app/*/*"
     ]
 
     condition {
@@ -260,10 +270,10 @@ data "aws_iam_policy_document" "lb_controller" {
       "elasticloadbalancing:RemoveTags"
     ]
     resources = [
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:listener/net/*/*/*",
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:listener/app/*/*/*",
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:listener-rule/app/*/*/*"
+      "arn:${local.partition}:elasticloadbalancing:*:*:listener/net/*/*/*",
+      "arn:${local.partition}:elasticloadbalancing:*:*:listener/app/*/*/*",
+      "arn:${local.partition}:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
+      "arn:${local.partition}:elasticloadbalancing:*:*:listener-rule/app/*/*/*"
     ]
     effect = "Allow"
   }
@@ -302,7 +312,7 @@ data "aws_iam_policy_document" "lb_controller" {
       "elasticloadbalancing:DeregisterTargets"
     ]
     resources = [
-      "arn:${var.arn_format}:elasticloadbalancing:*:*:targetgroup/*/*"
+      "arn:${local.partition}:elasticloadbalancing:*:*:targetgroup/*/*"
     ]
     effect = "Allow"
   }
@@ -342,7 +352,7 @@ data "aws_iam_policy_document" "lb_controller_assume" {
 
     principals {
       type        = "Federated"
-      identifiers = [var.cluster_identity_oidc_issuer_arn]
+      identifiers = ["arn:${local.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/oidc.eks.${data.aws_region.current.name}.${local.dns_suffix}/id/${local.oidc_id}"]
     }
 
     condition {
