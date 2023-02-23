@@ -15,7 +15,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "kb-eks-${random_string.suffix.result}"
+  cluster_name = var.cluster_name == "" ? "kb-eks-${random_string.suffix.result}" : var.cluster_name
 }
 
 resource "random_string" "suffix" {
