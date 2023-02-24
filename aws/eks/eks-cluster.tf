@@ -26,7 +26,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     one = {
-      name = "${local.cluster_name}-ng-1"
+      name = "kb-ng-1"
       instance_types = ["t3.small"]
 
       min_size     = 1
@@ -35,7 +35,7 @@ module "eks" {
     }
 
     two = {
-      name = "${local.cluster_name}-ng-2"
+      name = "kb-ng-2"
       instance_types = ["t3.small"]
 
       min_size     = 1
