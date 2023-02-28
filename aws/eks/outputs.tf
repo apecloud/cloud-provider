@@ -27,3 +27,8 @@ output "vpc_available_zones" {
   description = "VPC available zones"
   value       = module.vpc.azs
 }
+
+output "cluster_arn" {
+  description = "The Cluster Name (ARN)"
+  value       = module.eks.cluster_arn
+}
