@@ -2,8 +2,8 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.5.1"
 
-  cluster_name    = local.cluster_name
-  cluster_version = "1.24"
+  cluster_name                = local.cluster_name
+  cluster_version             = "1.24"
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   cluster_addons = {
@@ -12,8 +12,8 @@ module "eks" {
     }
   }
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id                         = module.vpc.vpc_id
+  subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
@@ -26,7 +26,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     one = {
-      name = "kb-ng-1"
+      name           = "kb-ng-1"
       instance_types = ["t3.small"]
 
       min_size     = 1
@@ -35,7 +35,7 @@ module "eks" {
     }
 
     two = {
-      name = "kb-ng-2"
+      name           = "kb-ng-2"
       instance_types = ["t3.small"]
 
       min_size     = 1
@@ -51,6 +51,14 @@ resource "null_resource" "storageclass-patch" {
   ]
 
   provisioner "local-exec" {
-    command = "script/sc-patch.sh ${var.region} ${module.eks.cluster_name}"
+    command = "script/sc-patch.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
+  }
+}
+
+resource "null_resource" "on-destroy" {
+  provisioner "local-exec" {
+    when       = destroy
+    on_failure = continue
+    command    = "script/destroy.sh"
   }
 }
