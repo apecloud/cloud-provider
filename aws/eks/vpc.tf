@@ -1,9 +1,9 @@
 #####
-# hack for region cn-north-1
+# hack for region cn-northwest-1
 #####
 locals {
-  tmp_available_zones = (var.region == "cn-north-1") && length(var.available_zones) == 0 ? [
-    "cn-north-1a", "cn-north-1b"
+  tmp_available_zones = (var.region == "cn-northwest-1") && length(var.available_zones) == 0 ? [
+    "cn-northwest-1a", "cn-northwest-1b"
   ] : var.available_zones
 }
 

@@ -12,11 +12,11 @@ Terraform configuration files to provision an EKS cluster on AWS.
 # Create && Delete All-In-One EKS Cluster on AWS
 * Export Environment Variable
 ```
-  # required, tested regions include ['cn-north-1', 'us-west-2']
-  export TF_VAR_region='cn-north-1'
+  # required, tested regions include ['cn-northwest-1', 'us-west-2']
+  export TF_VAR_region='cn-northwest-1'
   
   # optional, no need to provide in most cases
-  # export TF_VAR_available_zones='["cn-north-1a", "cn-north-1b"]'
+  # export TF_VAR_available_zones='["cn-northwest-1a", "cn-northwest-1b"]'
 ```
 * Create EKS Cluster
 ```

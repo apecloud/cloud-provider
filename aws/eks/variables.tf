@@ -1,6 +1,7 @@
 variable "region" {
   description = "AWS region"
   type        = string
+  default     = "cn-northwest-1"
 }
 
 variable "available_zones" {
