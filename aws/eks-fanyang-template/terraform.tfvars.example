@@ -1,0 +1,3 @@
+aws_region                  = "cn-northwest-1"
+cluster_name                = "apecloud-dev-00"
+additional_admin_role_names = ["apecloud-github-action-role"]
