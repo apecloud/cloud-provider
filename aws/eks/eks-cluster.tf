@@ -33,6 +33,16 @@ module "eks" {
       min_size     = 1
       max_size     = 3
       desired_size = 2
+      ebs_optimized = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
     }
 
     two = {
@@ -42,6 +52,16 @@ module "eks" {
       min_size     = 1
       max_size     = 2
       desired_size = 1
+      ebs_optimized = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
     }
   }
 }

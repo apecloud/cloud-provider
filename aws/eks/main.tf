@@ -13,9 +13,18 @@ provider "aws" {
 }
 
 data "aws_availability_zones" "available" {}
+data "aws_caller_identity" "current" {}
 
 locals {
   cluster_name = var.cluster_name == "" ? "kb-eks-${random_string.suffix.result}" : var.cluster_name
+
+  tags = {
+    EKS        = local.cluster_name
+    Terraform  = "true"
+    owner      = reverse(split("/", data.aws_caller_identity.current.arn))[0]
+
+    "kubernetes.io/cluster/${local.cluster_name}" = "owned"
+  }
 }
 
 resource "random_string" "suffix" {
