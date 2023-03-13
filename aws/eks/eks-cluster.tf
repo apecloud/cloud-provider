@@ -27,7 +27,7 @@ module "eks" {
   eks_managed_node_groups = {
     one = {
       name           = "kb-ng-1"
-      instance_types = ["t4g.small"]
+      instance_types = ["t3.medium"]
 
       capacity_type  = "SPOT" # ON_DEMAND or SPOT
       min_size     = 1
@@ -47,7 +47,7 @@ module "eks" {
 
     two = {
       name           = "kb-ng-2"
-      instance_types = ["t4g.small"]
+      instance_types = ["t3.medium"]
       capacity_type  = "SPOT" # ON_DEMAND or SPOT
       min_size     = 1
       max_size     = 2
@@ -66,7 +66,7 @@ module "eks" {
   }
 }
 
-resource "null_resource" "storageclass-patch" {
+resource "nulL_resource" "storageclass-patch" {
   depends_on = [
     module.eks
   ]
