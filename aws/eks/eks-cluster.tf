@@ -17,7 +17,7 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
-    ami_type = "AL2_ARM_64"
+    ami_type = "AL2_x86_64"
 
     iam_role_additional_policies = {
       AmazonEBSCSIDriverPolicy =  (var.region == "cn-northwest-1") ? "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -27,7 +27,7 @@ module "eks" {
   eks_managed_node_groups = {
     one = {
       name           = "kb-ng-1"
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.large"]
 
       capacity_type  = "SPOT" # ON_DEMAND or SPOT
       min_size     = 1
@@ -47,7 +47,7 @@ module "eks" {
 
     two = {
       name           = "kb-ng-2"
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.large"]
       capacity_type  = "SPOT" # ON_DEMAND or SPOT
       min_size     = 1
       max_size     = 2
