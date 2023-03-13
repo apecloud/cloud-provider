@@ -66,7 +66,7 @@ module "eks" {
   }
 }
 
-resource "nulL_resource" "storageclass-patch" {
+resource "null_resource" "storageclass-patch" {
   depends_on = [
     module.eks
   ]
