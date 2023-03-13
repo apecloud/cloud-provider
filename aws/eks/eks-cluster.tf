@@ -29,7 +29,7 @@ module "eks" {
       name           = "kb-ng-1"
       instance_types = ["t3.large"]
 
-      capacity_type  = "SPOT" # ON_DEMAND or SPOT
+      capacity_type  = "ON_DEMAND" # ON_DEMAND or SPOT
       min_size     = 1
       max_size     = 3
       desired_size = 2
@@ -48,7 +48,7 @@ module "eks" {
     two = {
       name           = "kb-ng-2"
       instance_types = ["t3.large"]
-      capacity_type  = "SPOT" # ON_DEMAND or SPOT
+      capacity_type  = "ON_DEMAND" # ON_DEMAND or SPOT
       min_size     = 1
       max_size     = 2
       desired_size = 1
