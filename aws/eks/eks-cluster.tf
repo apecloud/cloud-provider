@@ -20,43 +20,24 @@ module "eks" {
     ami_type = "AL2_x86_64"
 
     iam_role_additional_policies = {
-      AmazonEBSCSIDriverPolicy =  (var.region == "cn-northwest-1") ? "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      AmazonEBSCSIDriverPolicy = (var.region == "cn-north-1") || (var.region == "cn-northwest-1") ?
+      "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
     }
   }
 
   eks_managed_node_groups = {
-    one = {
-      name           = "kb-ng-1"
-      instance_types = ["t3.large"]
-
-      capacity_type  = "ON_DEMAND" # ON_DEMAND or SPOT
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
-      ebs_optimized = true
+    kb-ng = {
+      name                  = "kb-ng"
+      instance_types        = ["t3.large"]
+      capacity_type         = "ON_DEMAND" # ON_DEMAND or SPOT
+      min_size              = 1
+      max_size              = 5
+      desired_size          = 3
+      ebs_optimized         = true
       block_device_mappings = [
         {
           device_name = "/dev/xvda"
-          ebs = {
-            volume_type = "gp3"
-            volume_size = 20
-          }
-        }
-      ]
-    }
-
-    two = {
-      name           = "kb-ng-2"
-      instance_types = ["t3.large"]
-      capacity_type  = "ON_DEMAND" # ON_DEMAND or SPOT
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-      ebs_optimized = true
-      block_device_mappings = [
-        {
-          device_name = "/dev/xvda"
-          ebs = {
+          ebs         = {
             volume_type = "gp3"
             volume_size = 20
           }
