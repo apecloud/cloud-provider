@@ -24,6 +24,26 @@ module "eks" {
     }
   }
 
+  node_security_group_additional_rules = {
+    grafana = {
+      description                   = "grafana"
+      protocol                      = "tcp"
+      from_port                     = 3000
+      to_port                       = 3000
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+
+    prometheus = {
+      description                   = "prometheus"
+      protocol                      = "tcp"
+      from_port                     = 9090
+      to_port                       = 9090
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+  }
+
   eks_managed_node_groups = {
     kb-ng = {
       name                  = "kb-ng"
