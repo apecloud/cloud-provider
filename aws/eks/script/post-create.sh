@@ -31,14 +31,3 @@ if [ $? -ne 0 ]; then
     echo "update-kubeconfig fail"
     exit 1
 fi
-
-kubectl annotate sc gp2 storageclass.kubernetes.io/is-default-class-
-if [ $? -ne 0 ]; then
-    echo "remove default annotation from storage class gp2 fail, ignore"
-fi
-
-kubectl apply -f "${home}/gp3.yaml"
-if [ $? -ne 0 ]; then
-    echo "apply storage class gp3 fail"
-    exit 1
-fi
