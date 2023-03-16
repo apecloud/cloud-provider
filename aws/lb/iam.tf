@@ -5,8 +5,8 @@ locals {
   oidc_id = element(local.oidc_issuer, length(local.oidc_issuer) - 1)
   partition = data.aws_partition.current.partition
   dns_suffix = data.aws_partition.current.dns_suffix
-  # partition = (local.region == "cn-northwest-1") ? "aws-cn" : "aws"
-  # domain_suffix = (local.region == "cn-northwest-1") ? "com.cn" : "com"
+  # partition = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "aws-cn" : "aws"
+  # domain_suffix = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "com.cn" : "com"
 }
 
 data "aws_iam_policy_document" "lb_controller" {
