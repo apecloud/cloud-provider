@@ -25,10 +25,10 @@ variable "instance_type" {
 variable "arch" {
   description = "The architecture of the AMI to use"
   type        = string
-  default     = "x86"    # x86 or arm
+  default     = "amd64"
   validation {
-    condition     = contains(["x86", "arm"], var.arch)
-    error_message = "The architecture must be x86 or arm."
+    condition     = contains(["amd64", "arm64"], var.arch)
+    error_message = "The architecture must be amd64 or arm64."
   }
 }
 

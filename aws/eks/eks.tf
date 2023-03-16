@@ -17,7 +17,7 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
-    ami_type = var.arch == "arm" ? "AL2_ARM_64" : "AL2_x86_64"
+    ami_type = var.arch == "arm64" ? "AL2_ARM_64" : "AL2_x86_64"
 
     iam_role_additional_policies = {
       AmazonEBSCSIDriverPolicy = (var.region == "cn-north-1") || (var.region == "cn-northwest-1") ? "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
