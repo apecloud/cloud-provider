@@ -5,8 +5,8 @@
 export TF_VAR_region='cn-northwest-1'
 #export TF_VAR_region='us-west-2'
 
-# specified available zones if needed, omit in most cases
-#export TF_VAR_available_zones='["cn-northwest-1a", "cn-northwest-1b"]'
+# specified available zones if needed, limit only 1 zone here for save cost
+export TF_VAR_available_zones='["cn-northwest-1b"]'
 
 # initializes a working directory containing Terraform configuration files
 terraform init -upgrade
