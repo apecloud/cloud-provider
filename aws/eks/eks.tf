@@ -66,10 +66,14 @@ module "eks" {
   }
 }
 
-resource "null_resource" "storageclass-patch" {
+resource "null_resource" "post-create" {
   depends_on = [
     module.eks
   ]
+
+  triggers = {
+    always_run = timestamp()
+  }
 
   provisioner "local-exec" {
     command = "script/post-create.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
