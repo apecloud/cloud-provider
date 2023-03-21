@@ -17,7 +17,7 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
-    ami_type = "AL2_x86_64"
+    ami_type = var.arch == "arm64" ? "AL2_ARM_64" : "AL2_x86_64"
 
     iam_role_additional_policies = {
       AmazonEBSCSIDriverPolicy = (var.region == "cn-north-1") || (var.region == "cn-northwest-1") ? "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" : "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -47,8 +47,8 @@ module "eks" {
   eks_managed_node_groups = {
     kb-ng = {
       name                  = "kb-ng"
-      instance_types        = ["t3.large"]
-      capacity_type         = "ON_DEMAND" # ON_DEMAND or SPOT
+      instance_types        = [var.instance_type]
+      capacity_type         = var.capacity_type
       min_size              = 1
       max_size              = 5
       desired_size          = 3
@@ -72,7 +72,7 @@ resource "null_resource" "storageclass-patch" {
   ]
 
   provisioner "local-exec" {
-    command = "script/sc-patch.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
+    command = "script/post-create.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
   }
 }
 

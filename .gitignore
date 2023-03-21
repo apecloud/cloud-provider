@@ -5,3 +5,4 @@
 .terraform.lock.hcl
 terraform.tfvars
 *.lock.info
+.DS_Store
