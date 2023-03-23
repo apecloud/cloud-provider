@@ -21,24 +21,43 @@ provider "registry.terraform.io/hashicorp/kubernetes" {
   ]
 }
 
-provider "registry.terraform.io/tencentcloudstack/tencentcloud" {
-  version     = "1.79.12"
-  constraints = ">= 1.79.2"
+provider "registry.terraform.io/hashicorp/random" {
+  version = "3.4.3"
   hashes = [
-    "h1:Ac+z1BCAFPUixoRIhQXMdy4DSyCjxdvcpUOJmie0VS0=",
-    "zh:05a34ca6200751fb57cf3eac7478c5f8f1897e2e60bda7101dde0ea1c2175ea5",
-    "zh:182796d9c489bfddfd42ae0377f76b99e4cf1b5a82dd49bcb702a1b2fd7355fa",
-    "zh:2180c04c30b03ef62edf19f2e457965b1a418c44fd3b1e0ce8d26d7f45fdfaa3",
-    "zh:2d86f9656362421053405938de07c03dae7b836a8bf2c4e57b5df21353cfb824",
-    "zh:369c9d7eb0ad85c56ecd48ba908a396f7ff5759ca05aff8ff8f92fc69ebb565c",
-    "zh:40689db68f156186df3d0d0229d561d9e6d5af8b75ad96b8b6bc4faaa0b90d75",
-    "zh:6d3d80bfe5429bca2d97026b522fff23b409d7633e47979e8145da42040c8c4e",
-    "zh:82c39d85ead7fdf1df99a83a4eb9d6cd7c129210b6391edf512ff3dd98360bd4",
-    "zh:839304185917c37016de98757738ce9cf9fdee0a40e4a11fc04da95bc8acaf4d",
-    "zh:930ddbb9a4457c35c183561d1c78bf26b8cb3cbed4ff2c6adedd0b3a2a132ffa",
-    "zh:d32a3c482161e9bdb72ee447f369a2c3aaacad4887629c5f2d75191b7fc46c3a",
-    "zh:da881e156d7549c09fdfd7e1d804956fb0619ff75e60f76ab502606473648c97",
-    "zh:f0e64c40c9d70524569ffcea60d82e79437d1b6bab675b6cc468cda805cc775c",
-    "zh:f8c1549107d40694fd06829f17ba1b7c8b2fa5696aedc80ae02935715855be11",
+    "h1:saZR+mhthL0OZl4SyHXZraxyaBNVMxiZzks78nWcZ2o=",
+    "zh:41c53ba47085d8261590990f8633c8906696fa0a3c4b384ff6a7ecbf84339752",
+    "zh:59d98081c4475f2ad77d881c4412c5129c56214892f490adf11c7e7a5a47de9b",
+    "zh:686ad1ee40b812b9e016317e7f34c0d63ef837e084dea4a1f578f64a6314ad53",
+    "zh:78d5eefdd9e494defcb3c68d282b8f96630502cac21d1ea161f53cfe9bb483b3",
+    "zh:84103eae7251384c0d995f5a257c72b0096605048f757b749b7b62107a5dccb3",
+    "zh:8ee974b110adb78c7cd18aae82b2729e5124d8f115d484215fd5199451053de5",
+    "zh:9dd4561e3c847e45de603f17fa0c01ae14cae8c4b7b4e6423c9ef3904b308dda",
+    "zh:bb07bb3c2c0296beba0beec629ebc6474c70732387477a65966483b5efabdbc6",
+    "zh:e891339e96c9e5a888727b45b2e1bb3fcbdfe0fd7c5b4396e4695459b38c8cb1",
+    "zh:ea4739860c24dfeaac6c100b2a2e357106a89d18751f7693f3c31ecf6a996f8d",
+    "zh:f0c76ac303fd0ab59146c39bc121c5d7d86f878e9a69294e29444d4c653786f8",
+    "zh:f143a9a5af42b38fed328a161279906759ff39ac428ebcfe55606e05e1518b93",
+  ]
+}
+
+provider "registry.terraform.io/tencentcloudstack/tencentcloud" {
+  version     = "1.79.17"
+  constraints = ">= 1.79.17"
+  hashes = [
+    "h1:qraJGmRS0bQvgpY6vbxvOkKQscVd/wjuT7wUsuMOtT4=",
+    "zh:0441b738b0a3e9fcba49495ccd5ba61ffe24b82377ca16e5d96276111bd12208",
+    "zh:41d2351e7b5a617775299fc9ecccccae840ccfea2ac296f585730592eb56d6ca",
+    "zh:42c564671d68999b4c656cc25bc650b81118915524405b88a75368af0305c12c",
+    "zh:450e4e2c636935b523d69d19230e4c4f22b4e93e9b4adb9f2aa676c73a3c5a26",
+    "zh:5c19b4614251f1f4afde8382672f9d5fd931236d6911bf6c5e8955dd25968f6a",
+    "zh:74a2f1f38fe27eb918ead82c75923f0ac73b1728d25580a4c686fc1c2f8d3b62",
+    "zh:8b1ff02238d4490d1eb5fba7d4c76f2c14a118484d2ec85455d876bbd8c2d6a8",
+    "zh:8c9b63a58be475ddd02b08208d8ba68c225e0105b289093064f16a4d7098d9f4",
+    "zh:9e710e2787d673cf078fd2e8643f2d08dc685d1fe783ceaeede836fb16c0c178",
+    "zh:ab08c0b457b4d41e40e29861e8cab7724240582265c616d9aa031a61af3ee6a2",
+    "zh:bae007353e3511f748452df984aced1e9c529f473f7138f18087880a674d158e",
+    "zh:ca90101b536ef96f832a5b1e44c64d5ac66cf59845cce0a742cc7d6317f36fe9",
+    "zh:dda51fa0080d829f1574ab7dd998a101e1ef3af311a6e3398b9058cce5d4024e",
+    "zh:f1be41dbda1a0e70c9eb9cfa96d5cb121ac865b909ecde65df4285ff59eee897",
   ]
 }

@@ -1,4 +1,19 @@
-output "load_balancer_ip" {
-  description = "Public ip address exposed by load balancer after application deploy finished."
-  value       = kubernetes_ingress_v1.test.status.0.load_balancer.0.ingress.0.ip
+output "cluster_name" {
+  description = "Kubernetes Cluster Name"
+  value       = module.tke.cluster_id
+}
+
+output "region" {
+  description = "region name"
+  value       = var.region
+}
+
+output "kube_config" {
+  description = "Kubernetes Cluster kubeconfig"
+  value       = module.tke.kube_config
+}
+
+output "available_zone" {
+  description = "Kubernetes Cluster available_zone"
+  value       = local.available_zone
 }

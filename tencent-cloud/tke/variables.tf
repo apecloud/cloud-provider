@@ -1,12 +1,11 @@
-variable "accept_ip" {
-  type    = string
-  default = "27.38.70.216"
+variable "cluster_name" {
+  type        = string
+  description = "The name of the cluster."
+  default     = "tke-test"
 }
 
 variable "region" {
-  default = "ap-guangzhou"
-}
-
-variable "available_zone" {
-  default = "ap-guangzhou-6"
+  description = "region"
+  type        = string
+  default     = "ap-chengdu"
 }
