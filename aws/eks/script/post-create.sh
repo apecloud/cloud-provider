@@ -24,7 +24,7 @@ fi
 # echo cluster into to file eks.info that will be used by destroy.sh
 echo "${region} ${cluster_name} ${context_name}" >"${home}/eks.info"
 
-export KUBECONFIG=~/.kube/config
+export KUBECONFIG="${home}/kubeconfig"
 aws eks update-kubeconfig --region "${region}" --name "${cluster_name}"
 if [ $? -ne 0 ]; then
     echo "update-kubeconfig fail"
