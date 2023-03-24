@@ -3,10 +3,10 @@ provider "tencentcloud" {
 }
 
 provider "kubernetes" {
-  host                   = module.tke.cluster_endpoint
-  cluster_ca_certificate = module.tke.cluster_ca_certificate
-  client_key             = base64decode(module.tke.client_key)
-  client_certificate     = base64decode(module.tke.client_certificate)
+  host                   = tencentcloud_kubernetes_cluster.this.cluster_external_endpoint
+  cluster_ca_certificate = tencentcloud_kubernetes_cluster.this.certification_authority
+  client_key             = base64decode(local.kube_config.users[0].user["client-key-data"])
+  client_certificate     = base64decode(local.kube_config.users[0].user["client-certificate-data"])
 }
 
 data "tencentcloud_availability_zones_by_product" "cvm" {
@@ -15,4 +15,5 @@ data "tencentcloud_availability_zones_by_product" "cvm" {
 
 locals {
   available_zone = data.tencentcloud_availability_zones_by_product.cvm.zones.0.name
+  kube_config    = yamldecode(tencentcloud_kubernetes_cluster.this.kube_config)
 }

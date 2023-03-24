@@ -4,7 +4,7 @@ resource "tencentcloud_vpc" "this" {
   name       = "${var.cluster_name}-vpc"
 }
 
-resource "tencentcloud_subnet" "intranet" {
+resource "tencentcloud_subnet" "this" {
   cidr_block        = "10.0.1.0/24"
   name              = "${var.cluster_name}-subnet"
   availability_zone = local.available_zone
@@ -20,10 +20,7 @@ resource "tencentcloud_security_group_lite_rule" "this" {
   security_group_id = tencentcloud_security_group.this.id
 
   ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
     "ACCEPT#0.0.0.0/0#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL"
   ]
 
   egress = [

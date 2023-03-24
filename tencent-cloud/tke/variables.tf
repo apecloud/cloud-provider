@@ -1,7 +1,7 @@
 variable "cluster_name" {
   type        = string
   description = "The name of the cluster."
-  default     = "tke-test"
+  default     = "kb-tke-test"
 }
 
 variable "region" {

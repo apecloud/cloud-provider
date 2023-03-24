@@ -1,6 +1,6 @@
 output "cluster_name" {
-  description = "Kubernetes Cluster Name"
-  value       = module.tke.cluster_id
+  description = "Kubernetes Cluster ID, this cluster name is used to kubeconfig"
+  value       = tencentcloud_kubernetes_cluster.this.id
 }
 
 output "region" {
@@ -10,7 +10,7 @@ output "region" {
 
 output "kube_config" {
   description = "Kubernetes Cluster kubeconfig"
-  value       = module.tke.kube_config
+  value       = tencentcloud_kubernetes_cluster.this.kube_config
 }
 
 output "available_zone" {
