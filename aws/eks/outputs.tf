@@ -36,4 +36,5 @@ output "cluster_arn" {
 output "kube_config" {
   description = "Kubeconfig"
   value       = local.kubeconfig
+  sensitive   = true
 }
