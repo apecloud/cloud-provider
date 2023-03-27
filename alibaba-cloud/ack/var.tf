@@ -1,10 +1,9 @@
-
 variable "user_name" {
   description = "RAM user name for managing Kubernetes cluster"
   default     = "ackadmin"
-} 
+}
 
- variable "availability_zone" {
+variable "availability_zone" {
   description = "The availability zones of vswitches."
   default     = ["cn-hangzhou-g", "cn-hangzhou-h", "cn-hangzhou-i"]
 }
@@ -42,89 +41,89 @@ variable "worker_instance_types" {
 # Password for Worker nodes
 variable "password" {
   description = "The password of ECS instance."
-  default     = "zijia@ACK123"
+  type        = string
+  default     = ""
 }
 
 # Cluster Addons
 variable "cluster_addons_terway" {
   type = list(object({
-    name      = string
-    config    = string
+    name   = string
+    config = string
   }))
 
   default = [
     {
-      "name"     = "terway-eniip",
-      "config"   = "",
+      "name"   = "terway-eniip",
+      "config" = "",
     },
     {
-      "name"     = "logtail-ds",
-      "config"   = "{\"IngressDashboardEnabled\":\"true\"}",
+      "name"   = "logtail-ds",
+      "config" = "{\"IngressDashboardEnabled\":\"true\"}",
     },
     {
-      "name"     = "nginx-ingress-controller",
-      "config"   = "{\"IngressSlbNetworkType\":\"internet\"}",
+      "name"   = "nginx-ingress-controller",
+      "config" = "{\"IngressSlbNetworkType\":\"internet\"}",
     },
     {
-      "name"     = "arms-prometheus",
-      "config"   = "",
-      "disabled": false,
+      "name"   = "arms-prometheus",
+      "config" = "",
+      "disabled" : false,
     },
     {
-      "name"     = "ack-node-problem-detector",
-      "config"   = "{\"sls_project_name\":\"\"}",
-      "disabled": false,
+      "name"   = "ack-node-problem-detector",
+      "config" = "{\"sls_project_name\":\"\"}",
+      "disabled" : false,
     },
     {
-      "name"     = "csi-plugin",
-      "config"   = "",
+      "name"   = "csi-plugin",
+      "config" = "",
     },
     {
-      "name"     = "csi-provisioner",
-      "config"   = "",
+      "name"   = "csi-provisioner",
+      "config" = "",
     }
   ]
 }
 
 
-
 # Cluster Addons for Flannel
 variable "cluster_addons_flannel" {
   type = list(object({
-    name      = string
-    config    = string
+    name   = string
+    config = string
   }))
 
   default = [
     {
-      "name"     = "flannel",
-      "config"   = "",
+      "name"   = "flannel",
+      "config" = "",
     },
     {
-      "name"     = "logtail-ds",
-      "config"   = "{\"IngressDashboardEnabled\":\"true\"}",
+      "name"   = "logtail-ds",
+      "config" = "{\"IngressDashboardEnabled\":\"true\"}",
     },
     {
-      "name"     = "nginx-ingress-controller",
-      "config"   = "{\"IngressSlbNetworkType\":\"internet\"}",
+      "name"   = "nginx-ingress-controller",
+      "config" = "{\"IngressSlbNetworkType\":\"internet\"}",
     },
     {
-      "name"     = "arms-prometheus",
-      "config"   = "",
-      "disabled": false,
+      "name"   = "arms-prometheus",
+      "config" = "",
+      "disabled" : false,
     },
     {
-      "name"     = "ack-node-problem-detector",
-      "config"   = "{\"sls_project_name\":\"\"}",
-      "disabled": false,
+      "name"   = "ack-node-problem-detector",
+      "config" = "{\"sls_project_name\":\"\"}",
+      "disabled" : false,
     },
     {
-      "name"     = "csi-plugin",
-      "config"   = "",
+      "name"   = "csi-plugin",
+      "config" = "",
     },
     {
-      "name"     = "csi-provisioner",
-      "config"   = "",
+      "name"   = "csi-provisioner",
+      "config" = "",
     }
   ]
 }
