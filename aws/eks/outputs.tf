@@ -32,3 +32,8 @@ output "cluster_arn" {
   description = "The Cluster Name (ARN)"
   value       = module.eks.cluster_arn
 }
+
+output "kube_config" {
+  description = "Kubeconfig"
+  value       = local.kubeconfig
+}

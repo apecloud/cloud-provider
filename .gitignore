@@ -6,3 +6,4 @@
 terraform.tfvars
 *.lock.info
 .DS_Store
+kubeconfig

@@ -1,11 +1,17 @@
-variable "user_name" {
-  description = "RAM user name for managing Kubernetes cluster"
-  default     = "ackadmin"
+variable "cluster_name" {
+  description = "The name of the managed kubernetes cluster."
+  default     = "kb-ack-test"
 }
 
-variable "availability_zone" {
-  description = "The availability zones of vswitches."
-  default     = ["cn-hangzhou-g", "cn-hangzhou-h", "cn-hangzhou-i"]
+variable "region" {
+  description = "region"
+  type        = string
+  default     = "cn-hangzhou"
+}
+
+variable "available_zones" {
+  description = "The availability zones of region."
+  default     = []
 }
 
 variable "node_vswitch_ids" {
@@ -17,7 +23,7 @@ variable "node_vswitch_ids" {
 variable "node_vswitch_cidrs" {
   description = "List of cidr blocks used to create several new vswitches when 'node_vswitch_ids' is not specified."
   type        = list(string)
-  default     = ["172.16.0.0/23", "172.16.2.0/23", "172.16.4.0/23"]
+  default     = ["172.16.0.0/23"]
 }
 
 variable "terway_vswitch_ids" {
@@ -29,20 +35,18 @@ variable "terway_vswitch_ids" {
 variable "terway_vswitch_cidrs" {
   description = "List of cidr blocks used to create several new vswitches when 'terway_vswitch_ids' is not specified."
   type        = list(string)
-  default     = ["172.16.208.0/20", "172.16.224.0/20", "172.16.240.0/20"]
+  default     = ["172.16.208.0/20"]
 }
 
 # Node Pool worker_instance_types
 variable "worker_instance_types" {
   description = "The ecs instance types used to launch worker nodes."
-  default     = ["ecs.g5.xlarge", "ecs.g6.xlarge"]
+  default     = ["ecs.g5.xlarge", "ecs.g6.xlarge", "ecs.g7.xlarge"]
 }
 
-# Password for Worker nodes
-variable "password" {
-  description = "The password of ECS instance."
-  type        = string
-  default     = ""
+variable "kubernetes_version" {
+  description = "The version of kubernetes."
+  default     = "1.24.6-aliyun.1"
 }
 
 # Cluster Addons
@@ -55,48 +59,6 @@ variable "cluster_addons_terway" {
   default = [
     {
       "name"   = "terway-eniip",
-      "config" = "",
-    },
-    {
-      "name"   = "logtail-ds",
-      "config" = "{\"IngressDashboardEnabled\":\"true\"}",
-    },
-    {
-      "name"   = "nginx-ingress-controller",
-      "config" = "{\"IngressSlbNetworkType\":\"internet\"}",
-    },
-    {
-      "name"   = "arms-prometheus",
-      "config" = "",
-      "disabled" : false,
-    },
-    {
-      "name"   = "ack-node-problem-detector",
-      "config" = "{\"sls_project_name\":\"\"}",
-      "disabled" : false,
-    },
-    {
-      "name"   = "csi-plugin",
-      "config" = "",
-    },
-    {
-      "name"   = "csi-provisioner",
-      "config" = "",
-    }
-  ]
-}
-
-
-# Cluster Addons for Flannel
-variable "cluster_addons_flannel" {
-  type = list(object({
-    name   = string
-    config = string
-  }))
-
-  default = [
-    {
-      "name"   = "flannel",
       "config" = "",
     },
     {
