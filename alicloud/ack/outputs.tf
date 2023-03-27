@@ -1,6 +1,6 @@
 output "cluster_name" {
-  description = "Kubernetes Cluster ID, this cluster name is used to kubeconfig"
-  value       = alicloud_cs_managed_kubernetes.ack.id
+  description = "Kubernetes Cluster name"
+  value       = var.cluster_name
 }
 
 output "region" {
