@@ -11,7 +11,6 @@ provider "kubernetes" {
 
 data "alicloud_cs_cluster_credential" "auth" {
   cluster_id                 = alicloud_cs_managed_kubernetes.ack.id
-  output_file                = "kubeconfig"
   temporary_duration_minutes = 4320
 }
 
