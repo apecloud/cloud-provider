@@ -3,8 +3,6 @@ data "aws_partition" "current" {}
 
 locals {
   region = data.aws_region.current.name
-  oidc_issuer = split("/", module.eks.identity[0].oidc[0].issuer)
-  oidc_id = element(local.oidc_issuer, length(local.oidc_issuer) - 1)
   partition = data.aws_partition.current.partition
   dns_suffix = data.aws_partition.current.dns_suffix
   # partition = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "aws-cn" : "aws"
