@@ -11,6 +11,7 @@ output "region" {
 output "kube_config" {
   description = "Kubernetes Cluster kubeconfig"
   value       = tencentcloud_kubernetes_cluster.this.kube_config
+  sensitive   = true
 }
 
 output "available_zone" {

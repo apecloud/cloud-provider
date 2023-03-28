@@ -32,6 +32,7 @@ resource "tencentcloud_kubernetes_cluster" "this" {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
+
     enhanced_security_service = false
     enhanced_monitor_service  = false
   }
@@ -42,6 +43,10 @@ resource "tencentcloud_kubernetes_cluster" "this" {
 
   event_persistence {
     enabled = false
+  }
+
+  tags = {
+    "app" = "kubeblocks",
   }
 
   labels = {
