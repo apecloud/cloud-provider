@@ -3,6 +3,8 @@ data "aws_partition" "current" {}
 
 locals {
   region = data.aws_region.current.name
+  oidc_issuer = split("/", module.eks.identity[0].oidc[0].issuer)
+  oidc_id = element(local.oidc_issuer, length(local.oidc_issuer) - 1)
   partition = data.aws_partition.current.partition
   dns_suffix = data.aws_partition.current.dns_suffix
   # partition = (local.region == "cn-north-1" || local.region == "cn-northwest-1") ? "aws-cn" : "aws"
@@ -332,11 +334,11 @@ data "aws_iam_policy_document" "lb_controller" {
 }
 
 resource "aws_iam_policy" "lb_controller" {
-  name        = "${var.cluster_name}-alb-ingress"
+  name        = "${module.eks.cluster_name}-alb-ingress"
   path        = "/"
   description = "Policy for alb-ingress service"
 
-  policy = data.aws_iam_policy_document.lb_controller[0].json
+  policy = data.aws_iam_policy_document.lb_controller.json
 }
 
 # Role
@@ -363,11 +365,11 @@ data "aws_iam_policy_document" "lb_controller_assume" {
 }
 
 resource "aws_iam_role" "lb_controller" {
-  name               = "${var.cluster_name}-alb-ingress"
-  assume_role_policy = data.aws_iam_policy_document.lb_controller_assume[0].json
+  name               = "${module.eks.cluster_name}-alb-ingress"
+  assume_role_policy = data.aws_iam_policy_document.lb_controller_assume.json
 }
 
 resource "aws_iam_role_policy_attachment" "lb_controller" {
-  role       = aws_iam_role.lb_controller[0].name
-  policy_arn = aws_iam_policy.lb_controller[0].arn
+  role       = aws_iam_role.lb_controller.name
+  policy_arn = aws_iam_policy.lb_controller.arn
 }
