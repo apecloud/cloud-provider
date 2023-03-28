@@ -9,6 +9,8 @@ resource "tencentcloud_kubernetes_cluster" "this" {
   cluster_deploy_type     = "MANAGED_CLUSTER"
   cluster_os              = "centos7.8.0_x64"
   cluster_version         = "1.24.4"
+  container_runtime       = "containerd"
+  runtime_version         = "1.6.9"
 
   cluster_internet_security_group = tencentcloud_security_group.this.id
 
@@ -48,6 +50,13 @@ resource "tencentcloud_kubernetes_cluster" "this" {
 
   extra_args = [
     "root-dir=/var/lib/kubelet"
+  ]
+
+  depends_on = [
+    tencentcloud_vpc.this,
+    tencentcloud_subnet.this,
+    tencentcloud_security_group.this,
+    tencentcloud_security_group_lite_rule.this,
   ]
 }
 
