@@ -39,7 +39,8 @@ resource "google_container_node_pool" "this" {
     disk_size_gb = 100
 
     # preemptible  = true
-    machine_type = "n1-standard-1"
+    # https://cloud.google.com/compute/docs/general-purpose-machines?hl=zh-cn
+    machine_type = "n1-standard-2" # 2 vCPU, 8 GB memory
     tags         = ["gke-node", var.cluster_name]
     metadata     = {
       disable-legacy-endpoints = "true"
