@@ -45,13 +45,39 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    kb-ng = {
-      name                  = "kb-ng"
+    control-plane = {
+      name                  = "kb-control-plane"
+      instance_types        = [var.instance_type]
+      capacity_type         = var.capacity_type
+      min_size              = 1
+      max_size              = 3
+      desired_size          = 1
+      ebs_optimized         = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs         = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
+      taints = [
+        {
+          key    = "kb-controller"
+          value  = "true"
+          effect = "NoSchedule"
+        }
+      ]
+    }
+
+    data-plane = {
+      name                  = "kb-data-plane"
       instance_types        = [var.instance_type]
       capacity_type         = var.capacity_type
       min_size              = 1
       max_size              = 5
-      desired_size          = 3
+      desired_size          = 4
       ebs_optimized         = true
       block_device_mappings = [
         {
