@@ -66,9 +66,12 @@ module "eks" {
         {
           key    = "kb-controller"
           value  = "true"
-          effect = "NoSchedule"
+          effect = "NO_SCHEDULE"
         }
       ]
+      labels = {
+        "kb-controller" = "true"
+      }
     }
 
     data-plane = {
@@ -88,6 +91,16 @@ module "eks" {
           }
         }
       ]
+      taints = [
+        {
+          key    = "kb-data"
+          value  = "true"
+          effect = "NO_SCHEDULE"
+        }
+      ]
+      labels = {
+        "kb-data" = "true"
+      }
     }
   }
 }
