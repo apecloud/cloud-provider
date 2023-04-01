@@ -127,6 +127,11 @@ resource "null_resource" "post-create" {
   provisioner "local-exec" {
     command = "script/post-create.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
   }
+
+  # let coredns deployment to be scheduled on tainted nodes, otherwise it will be stuck in pending state
+  provisioner "local-exec" {
+    command = "kubectl -n kube-system patch deployment coredns --patch '{\"spec\": {\"template\": {\"spec\": {\"tolerations\": [{\"operator\": \"Exists\"}]}}}}'"
+  }
 }
 
 resource "null_resource" "on-destroy" {
