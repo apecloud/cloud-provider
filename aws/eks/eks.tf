@@ -8,7 +8,17 @@ module "eks" {
 
   cluster_addons = {
     aws-ebs-csi-driver = {
-      most_recent = true
+      most_recent          = true
+      configuration_values = yamlencode({
+        controller = {
+          # tolerate all taints, otherwise the controller will not be able to schedule on tainted nodes
+          tolerations = [
+            {
+              operator = "Exists"
+            }
+          ]
+        }
+      })
     }
   }
 
