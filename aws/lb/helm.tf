@@ -50,11 +50,6 @@ resource "helm_release" "lb_controller" {
     value = "${var.image_registries[data.aws_region.current.name]}/amazon/aws-load-balancer-controller"
   }
 
-  set {
-    name = "tolerations[0].operator"
-    value = "Exists"
-  }
-
   values = [
     yamlencode(var.settings)
   ]

@@ -7,17 +7,26 @@ module "eks" {
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   cluster_addons = {
+    # we only has one node group that has one node for kubernetes control plane,
+    # so we need to set the default replicas to 1
     aws-ebs-csi-driver = {
       most_recent          = true
       configuration_values = yamlencode({
         controller = {
-          # tolerate all taints, otherwise the controller will not be able to schedule on tainted nodes
+          # csi driver controller does not support to specify the replica count, the default replica count is 2,
+          # so, we should tolerate all taints, otherwise the controller will not be able to schedule on tainted nodes
           tolerations = [
             {
               operator = "Exists"
             }
           ]
         }
+      })
+    }
+    coredns = {
+      most_recent          = true
+      configuration_values = yamlencode({
+        replicaCount = 1
       })
     }
   }
@@ -55,9 +64,32 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
+    kube-system = {
+      name                  = "kube-system"
+      # control plane use a smaller instance type to save cost
+      # t3.medium is 2c4g
+      instance_types        = ["t3.medium"]
+      capacity_type         = var.capacity_type
+      min_size              = 1
+      max_size              = 3
+      desired_size          = 1
+      ebs_optimized         = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs         = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
+    }
+
     control-plane = {
       name                  = "kb-control-plane"
-      instance_types        = [var.instance_type]
+      # control plane use a smaller instance type to save cost
+      # t3.medium is 2c4g
+      instance_types        = ["t3.medium"]
       capacity_type         = var.capacity_type
       min_size              = 1
       max_size              = 3
@@ -126,11 +158,6 @@ resource "null_resource" "post-create" {
 
   provisioner "local-exec" {
     command = "script/post-create.sh ${var.region} ${module.eks.cluster_name} ${module.eks.cluster_arn}"
-  }
-
-  # let coredns deployment to be scheduled on tainted nodes, otherwise it will be stuck in pending state
-  provisioner "local-exec" {
-    command = "kubectl -n kube-system patch deployment coredns --patch '{\"spec\": {\"template\": {\"spec\": {\"tolerations\": [{\"operator\": \"Exists\"}]}}}}'"
   }
 }
 
