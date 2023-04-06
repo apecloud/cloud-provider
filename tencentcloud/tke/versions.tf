@@ -1,15 +1,12 @@
 terraform {
   required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "4.59.0"
-    }
-
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 2.19.0"
     }
+    tencentcloud = {
+      source  = "tencentcloudstack/tencentcloud"
+      version = ">=1.79.18"
+    }
   }
-
-  required_version = ">= 0.14"
 }

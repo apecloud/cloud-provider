@@ -25,6 +25,44 @@ data "aws_eks_cluster_auth" "this" {
 locals {
   cluster_name = var.cluster_name == "" ? "kb-eks-${random_string.suffix.result}" : var.cluster_name
 
+  kubeconfig = yamlencode({
+    apiVersion      = "v1"
+    kind            = "Config"
+    current-context = module.eks.cluster_arn
+    clusters        = [
+      {
+        name    = module.eks.cluster_arn
+        cluster = {
+          certificate-authority-data = module.eks.cluster_certificate_authority_data
+          server                     = module.eks.cluster_endpoint
+        }
+      }
+    ]
+    contexts = [
+      {
+        name    = module.eks.cluster_arn
+        context = {
+          cluster = module.eks.cluster_arn
+          user    = module.eks.cluster_arn
+        }
+      }
+    ]
+    users = [
+      {
+        name = module.eks.cluster_arn
+        user = {
+          exec : {
+            apiVersion = "client.authentication.k8s.io/v1beta1"
+            command    = "aws"
+            args       = [
+              "eks", "get-token", "--cluster-name", var.cluster_name, "--region", var.region, "--output", "json"
+            ]
+          }
+        }
+      }
+    ]
+  })
+
   tags = {
     EKS       = local.cluster_name
     Terraform = "true"
