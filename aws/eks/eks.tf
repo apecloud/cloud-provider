@@ -7,8 +7,27 @@ module "eks" {
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   cluster_addons = {
+    # we only has one node group that has one node for kubernetes control plane,
+    # so we need to set the default replicas to 1
     aws-ebs-csi-driver = {
-      most_recent = true
+      most_recent          = true
+      configuration_values = yamlencode({
+        controller = {
+          # csi driver controller does not support to specify the replica count, the default replica count is 2,
+          # so, we should tolerate all taints, otherwise the controller will not be able to schedule on tainted nodes
+          tolerations = [
+            {
+              operator = "Exists"
+            }
+          ]
+        }
+      })
+    }
+    coredns = {
+      most_recent          = true
+      configuration_values = yamlencode({
+        replicaCount = 1
+      })
     }
   }
 
@@ -45,13 +64,15 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    kb-ng = {
-      name                  = "kb-ng"
-      instance_types        = [var.instance_type]
+    kube-system = {
+      name                  = "kube-system"
+      # control plane use a smaller instance type to save cost
+      # t3.medium is 2c4g
+      instance_types        = ["t3.medium"]
       capacity_type         = var.capacity_type
       min_size              = 1
-      max_size              = 5
-      desired_size          = 3
+      max_size              = 3
+      desired_size          = 1
       ebs_optimized         = true
       block_device_mappings = [
         {
@@ -62,6 +83,66 @@ module "eks" {
           }
         }
       ]
+    }
+
+    control-plane = {
+      name                  = "kb-control-plane"
+      # control plane use a smaller instance type to save cost
+      # t3.medium is 2c4g
+      instance_types        = ["t3.medium"]
+      capacity_type         = var.capacity_type
+      min_size              = 1
+      max_size              = 3
+      desired_size          = 1
+      ebs_optimized         = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs         = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
+      taints = [
+        {
+          key    = "kb-controller"
+          value  = "true"
+          effect = "NO_SCHEDULE"
+        }
+      ]
+      labels = {
+        "kb-controller" = "true"
+      }
+    }
+
+    data-plane = {
+      name                  = "kb-data-plane"
+      instance_types        = [var.instance_type]
+      capacity_type         = var.capacity_type
+      min_size              = 1
+      max_size              = 5
+      desired_size          = 4
+      ebs_optimized         = true
+      block_device_mappings = [
+        {
+          device_name = "/dev/xvda"
+          ebs         = {
+            volume_type = "gp3"
+            volume_size = 20
+          }
+        }
+      ]
+      taints = [
+        {
+          key    = "kb-data"
+          value  = "true"
+          effect = "NO_SCHEDULE"
+        }
+      ]
+      labels = {
+        "kb-data" = "true"
+      }
     }
   }
 }
