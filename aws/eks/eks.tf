@@ -34,6 +34,8 @@ module "eks" {
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
+  cluster_enabled_log_types      = []
+  tags                           = local.tags
 
   eks_managed_node_group_defaults = {
     ami_type = var.arch == "arm64" ? "AL2_ARM_64" : "AL2_x86_64"
@@ -65,7 +67,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     kube-system = {
-      name                  = "kube-system"
+      name                  = var.cluster_name
       # control plane use a smaller instance type to save cost
       # t3.medium is 2c4g
       instance_types        = ["t3.medium"]
@@ -86,7 +88,7 @@ module "eks" {
     }
 
     control-plane = {
-      name                  = "kb-control-plane"
+      name                  = var.cluster_name
       # control plane use a smaller instance type to save cost
       # t3.medium is 2c4g
       instance_types        = ["t3.medium"]
@@ -117,7 +119,7 @@ module "eks" {
     }
 
     data-plane = {
-      name                  = "kb-data-plane"
+      name                  = var.cluster_name
       instance_types        = [var.instance_type]
       capacity_type         = var.capacity_type
       min_size              = 1
