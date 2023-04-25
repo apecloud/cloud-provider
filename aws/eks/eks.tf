@@ -6,6 +6,10 @@ module "eks" {
   cluster_version             = "1.25"
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
+  // KMS
+  create_kms_key                  = true
+  kms_key_deletion_window_in_days = 7
+
   cluster_addons = {
     aws-ebs-csi-driver = {
       most_recent = true
@@ -15,6 +19,8 @@ module "eks" {
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
+  cluster_enabled_log_types      = []
+  tags                           = local.tags
 
   eks_managed_node_group_defaults = {
     ami_type = var.arch == "arm64" ? "AL2_ARM_64" : "AL2_x86_64"
@@ -46,7 +52,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     kb-ng = {
-      name                  = "kb-ng"
+      name                  = local.cluster_name
       instance_types        = [var.instance_type]
       capacity_type         = var.capacity_type
       min_size              = 1
