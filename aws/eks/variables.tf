@@ -19,7 +19,7 @@ variable "available_zones" {
 variable "instance_type" {
   description = "Default EC2 instance type to provision"
   type        = string
-  default     = "t3.large" # 2 vCPUs, 8GB memory
+  default     = "t3a.large" # 2 vCPUs, 8GB memory
 }
 
 variable "arch" {

@@ -6,6 +6,10 @@ module "eks" {
   cluster_version             = "1.25"
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
+  // KMS
+  create_kms_key                  = true
+  kms_key_deletion_window_in_days = 7
+
   cluster_addons = {
     # we only has one node group that has one node for kubernetes control plane,
     # so we need to set the default replicas to 1
@@ -69,8 +73,8 @@ module "eks" {
     kube-system = {
       name                  = var.cluster_name
       # control plane use a smaller instance type to save cost
-      # t3.medium is 2c4g
-      instance_types        = ["t3.medium"]
+      # t3a.medium is 2c4g
+      instance_types        = ["t3a.medium"]
       capacity_type         = var.capacity_type
       min_size              = 1
       max_size              = 3
@@ -90,8 +94,8 @@ module "eks" {
     control-plane = {
       name                  = var.cluster_name
       # control plane use a smaller instance type to save cost
-      # t3.medium is 2c4g
-      instance_types        = ["t3.medium"]
+      # t3a.medium is 2c4g
+      instance_types        = ["t3a.medium"]
       capacity_type         = var.capacity_type
       min_size              = 1
       max_size              = 3
@@ -118,6 +122,7 @@ module "eks" {
       }
     }
 
+    # TODO: use unmanaged node group for data plane
     data-plane = {
       name                  = var.cluster_name
       instance_types        = [var.instance_type]
