@@ -36,7 +36,7 @@ resource "google_container_node_pool" "this" {
       app = "${var.cluster_name}-node"
     }
 
-    disk_size_gb = 100
+    disk_size_gb = 20
 
     # preemptible  = true
     # https://cloud.google.com/compute/docs/general-purpose-machines?hl=zh-cn
