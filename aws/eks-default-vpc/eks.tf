@@ -6,6 +6,10 @@ module "eks" {
   cluster_version = local.cluster_version
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
+  // KMS
+  create_kms_key                  = true
+  kms_key_deletion_window_in_days = 7
+
   cluster_enabled_log_types = local.cluster_enabled_log_types
 
   cluster_addons = {
