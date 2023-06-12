@@ -35,7 +35,7 @@ resource "kubernetes_annotations" "default-storageclass" {
   kind        = "StorageClass"
   force       = "true"
   metadata {
-    name = "alicloud-disk-topology-alltype"
+    name = "alicloud-disk-essd"
   }
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "true"
