@@ -14,6 +14,7 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
 
 # If a new VPC is desired, please disable these two queries and enable the vpc module.
 data "aws_vpc" "default" {
@@ -51,6 +52,7 @@ locals {
   max_size                  = var.max_size
   desired_size              = var.desired_size
   volume_size               = var.volume_size
+  owner                     = reverse(split("/", data.aws_caller_identity.current.arn))[0]
 
   addon_timeouts = {
     create = "10m"
@@ -62,6 +64,7 @@ locals {
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
     Terraform  = "true"
+    owner      = local.owner
 
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
