@@ -64,7 +64,7 @@ locals {
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
     Terraform  = "true"
-    owner      = local.owner
+    owner      = reverse(split("/", data.aws_caller_identity.current.arn))[0]
 
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
