@@ -17,6 +17,7 @@ Usage: $(basename "$0") <options>
     -it, --instance-type                    Node instance type (amd64/arm64)
     -cn, --cluster-name                     EKS cluster name
     -ns, --node-size                        Node size
+    -nt, --node-type                        Node type
 EOF
 }
 
@@ -45,8 +46,8 @@ terraform_init() {
             sed -i '' 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$INSTANCE_TYPE" ]]; then
-            sed -i '' 's/^instance_types.*/instance_types = ["'$INSTANCE_TYPE'"]/' terraform.tfvars
+        if [[ ! -z "$NODE_TYPE" ]]; then
+            sed -i '' 's/^instance_types.*/instance_types = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     else
         if [[ ! -z "$CLUSTER_VERSION" ]]; then
@@ -63,8 +64,8 @@ terraform_init() {
             sed -i 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$INSTANCE_TYPE" ]]; then
-            sed -i 's/^instance_types.*/instance_types = ["'$INSTANCE_TYPE'"]/' terraform.tfvars
+        if [[ ! -z "$NODE_TYPE" ]]; then
+            sed -i 's/^instance_types.*/instance_types = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     fi
 
@@ -90,6 +91,7 @@ main() {
     local INSTANCE_TYPE=""
     local CLUSTER_NAME=""
     local NODE_SIZE=""
+    local NODE_TYPE=""
     local UNAME=`uname -s`
 
     parse_command_line "$@"
@@ -135,6 +137,10 @@ parse_command_line() {
             ;;
             -ns|--node-size)
                 NODE_SIZE="$2"
+                shift
+            ;;
+            -nt|--node-type)
+                NODE_TYPE="$2"
                 shift
             ;;
             *)
