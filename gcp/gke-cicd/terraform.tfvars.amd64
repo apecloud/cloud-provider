@@ -1,0 +1,9 @@
+cluster_version = "1.26"
+project = "apecloud-platform-engineering"
+cluster_name = ""
+region = "us-central1"
+zone = "us-central1"
+gke_num_nodes = 6
+disk_size_gb = 20
+machine_type = "e2-standard-4"
+spot = true

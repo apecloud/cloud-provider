@@ -13,7 +13,7 @@ Usage: $(basename "$0") <options>
     -t, --type                              Run type
                                               1) terraform init
                                               2) terraform destroy
-    -cv, --cluster-version                  EKS cluster version (e.g. 1.25)
+    -cv, --cluster-version                  EKS cluster version (e.g. 1.26)
     -it, --instance-type                    Node instance type (amd64/arm64)
     -cn, --cluster-name                     EKS cluster name
     -ns, --node-size                        Node size
@@ -43,16 +43,15 @@ terraform_init() {
 
         if [[ ! -z "$CLUSTER_REGION" ]]; then
             sed -i '' 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
+            sed -i '' 's/^zone.*/zone = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
         if [[ ! -z "$NODE_SIZE" ]]; then
-            sed -i '' 's/^min_size.*/min_size = '$NODE_SIZE'/' terraform.tfvars
-            sed -i '' 's/^max_size.*/max_size = '$NODE_SIZE'/' terraform.tfvars
-            sed -i '' 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
+            sed -i '' 's/^gke_num_nodes.*/gke_num_nodes = '$NODE_SIZE'/' terraform.tfvars
         fi
 
         if [[ ! -z "$NODE_TYPE" ]]; then
-            sed -i '' 's/^instance_types.*/instance_types = ["'$NODE_TYPE'"]/' terraform.tfvars
+            sed -i '' 's/^machine_type.*/machine_type = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     else
         if [[ ! -z "$CLUSTER_VERSION" ]]; then
@@ -65,24 +64,23 @@ terraform_init() {
 
         if [[ ! -z "$CLUSTER_REGION" ]]; then
             sed -i 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
+            sed -i 's/^zone.*/zone = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
         if [[ ! -z "$NODE_SIZE" ]]; then
-            sed -i 's/^min_size.*/min_size = '$NODE_SIZE'/' terraform.tfvars
-            sed -i 's/^max_size.*/max_size = '$NODE_SIZE'/' terraform.tfvars
-            sed -i 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
+            sed -i 's/^gke_num_nodes.*/gke_num_nodes = '$NODE_SIZE'/' terraform.tfvars
         fi
 
         if [[ ! -z "$NODE_TYPE" ]]; then
-            sed -i 's/^instance_types.*/instance_types = ["'$NODE_TYPE'"]/' terraform.tfvars
+            sed -i 's/^machine_type.*/machine_type = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     fi
 
-    echo "terraform plan -out aws_eks"
-    terraform plan -out aws_eks
+    echo "terraform plan -out gcp_gke"
+    terraform plan -out gcp_gke
 
-    echo "terraform apply aws_eks"
-    terraform apply aws_eks
+    echo "terraform apply gcp_gke"
+    terraform apply gcp_gke
 }
 
 terraform_destroy() {
@@ -102,7 +100,7 @@ main() {
     local NODE_SIZE=""
     local NODE_TYPE=""
     local UNAME=`uname -s`
-    local CLUSTER_REGION="cn-northwest-1"
+    local CLUSTER_REGION="us-central1"
 
     parse_command_line "$@"
 
