@@ -30,7 +30,7 @@ locals {
   project_id = data.google_client_config.current.project
   project                   = var.project
   name                      = "cicd-gke-${random_string.suffix.result}"
-  cluster_name              = coalesce(var.cluster_name, local.name)
+  cluster_name              = lower(coalesce(var.cluster_name, local.name))
   cluster_version           = var.cluster_version
   region                    = var.region
   zone                      = var.zone
