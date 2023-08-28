@@ -102,9 +102,13 @@ main() {
     local NODE_SIZE=""
     local NODE_TYPE=""
     local UNAME=`uname -s`
-    local CLUSTER_REGION="cn-northwest-1"
+    local CLUSTER_REGION=""
 
     parse_command_line "$@"
+
+    if [[ -z "$CLUSTER_REGION" ]]; then
+        CLUSTER_REGION="cn-northwest-1"
+    fi
 
     export TF_VAR_region=$CLUSTER_REGION
 
