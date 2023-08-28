@@ -13,7 +13,7 @@ Usage: $(basename "$0") <options>
     -t, --type                              Run type
                                               1) terraform init
                                               2) terraform destroy
-    -cv, --cluster-version                  EKS cluster version (e.g. 1.26)
+    -cv, --cluster-version                  EKS cluster version (e.g. 1.25)
     -it, --instance-type                    Node instance type (amd64/arm64)
     -cn, --cluster-name                     EKS cluster name
     -ns, --node-size                        Node size
