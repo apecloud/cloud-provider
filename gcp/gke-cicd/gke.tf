@@ -17,6 +17,10 @@ resource "google_container_cluster" "this" {
 
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
+
+  workload_identity_config {
+      workload_pool = local.identity_namespace
+  }
 }
 
 # Separately Managed Node Pool

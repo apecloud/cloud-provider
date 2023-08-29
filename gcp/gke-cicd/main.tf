@@ -38,6 +38,7 @@ locals {
   disk_size_gb              = var.disk_size_gb
   machine_type              = var.machine_type
   spot                      = var.spot
+  identity_namespace        = "${var.project}.svc.id.goog"
 }
 
 resource "random_string" "suffix" {
