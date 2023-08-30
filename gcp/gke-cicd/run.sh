@@ -51,7 +51,7 @@ terraform_init() {
         fi
 
         if [[ ! -z "$NODE_TYPE" ]]; then
-            sed -i '' 's/^machine_type.*/machine_type = ["'$NODE_TYPE'"]/' terraform.tfvars
+            sed -i '' 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
     else
         if [[ ! -z "$CLUSTER_VERSION" ]]; then
@@ -72,7 +72,7 @@ terraform_init() {
         fi
 
         if [[ ! -z "$NODE_TYPE" ]]; then
-            sed -i 's/^machine_type.*/machine_type = ["'$NODE_TYPE'"]/' terraform.tfvars
+            sed -i 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
     fi
 
