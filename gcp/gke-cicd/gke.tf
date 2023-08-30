@@ -15,8 +15,9 @@ resource "google_container_cluster" "this" {
   initial_node_count       = 1
   min_master_version       = local.cluster_version
 
-  network    = google_compute_network.vpc.name
-  subnetwork = google_compute_subnetwork.subnet.name
+  network                  = "projects/${local.project}/global/networks/default"
+  # network    = google_compute_network.vpc.name
+  # subnetwork = google_compute_subnetwork.subnet.name
 
   workload_identity_config {
       workload_pool = local.identity_namespace
