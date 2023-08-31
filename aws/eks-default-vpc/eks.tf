@@ -40,6 +40,53 @@ module "eks" {
   subnet_ids = data.aws_subnets.private.ids
   cluster_endpoint_public_access = true
 
+  # Extend cluster security group rules
+  cluster_security_group_additional_rules = {
+    ingress_nodes_ephemeral_ports_tcp = {
+      description                = "Nodes to control plane on ephemeral ports"
+      protocol                   = "tcp"
+      from_port                  = 1025
+      to_port                    = 65535
+      type                       = "ingress"
+      source_node_security_group = true
+    }
+  }
+
+  # Extend node-to-node security group rules.
+  node_security_group_additional_rules = {
+    ingress_self_all = {
+      description = "Node to node traffic on all ports in all protocols"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
+      self        = true
+    }
+
+    egress_all = {
+      description      = "All outbound traffic from nodes"
+      protocol         = "-1"
+      from_port        = 0
+      to_port          = 0
+      type             = "egress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # Allow control plane nodes to talk to worker nodes on all ports.
+    # This can be restricted further to specific ports based on the requirement for each Add-on,
+    # e.g., metrics-server 4443, spark-operator 8080, karpenter 8443 etc.
+    # Change this according to your security requirements if needed.
+    ingress_cluster_to_node_all_traffic = {
+      description                   = "Control plane to node traffic on all ports"
+      protocol                      = "-1"
+      from_port                     = 0
+      to_port                       = 0
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+  }
+
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
   }
