@@ -55,8 +55,8 @@ locals {
   owner                     = reverse(split("/", data.aws_caller_identity.current.arn))[0]
 
   addon_timeouts = {
-    create = "10m"
-    delete = "10m"
+    create = "20m"
+    delete = "20m"
   }
 
   tags = {
