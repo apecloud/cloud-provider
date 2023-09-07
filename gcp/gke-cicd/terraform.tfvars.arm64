@@ -4,6 +4,6 @@ cluster_name = ""
 region = "us-central1"
 zone = "us-central1"
 gke_num_nodes = 6
-disk_size_gb = 20
+disk_size_gb = 40
 machine_type = "t2a-standard-4"
 spot = true
