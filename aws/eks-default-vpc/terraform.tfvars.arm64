@@ -8,4 +8,4 @@ capacity_type = "SPOT"
 min_size = 17
 max_size = 20
 desired_size = 17
-volume_size = 20
+volume_size = 40
