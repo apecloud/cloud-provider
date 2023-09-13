@@ -10,4 +10,4 @@ capacity_type = "ON_DEMAND"
 min_size = 3
 max_size = 3
 desired_size = 3
-volume_size = 40
+volume_size = 50
