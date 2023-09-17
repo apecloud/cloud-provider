@@ -5,6 +5,7 @@ node_group_name = "amd64"
 instance_types_kb_data = ["m5a.xlarge"]
 instance_types_kb_controller = ["m5a.xlarge"]
 instance_types_sysbench = ["m5a.xlarge"]
+instance_types_kube_system = ["t3a.medium"]
 ami_type = "AL2_x86_64"
 capacity_type = "ON_DEMAND"
 min_size = 3

@@ -5,6 +5,7 @@ node_group_name = "arm64"
 instance_types_kb_data = ["m6g.xlarge"]
 instance_types_kb_controller = ["m6g.xlarge"]
 instance_types_sysbench = ["m6g.xlarge"]
+instance_types_kube_system = ["t4g.medium"]
 ami_type = "AL2_ARM_64"
 capacity_type = "ON_DEMAND"
 min_size = 3

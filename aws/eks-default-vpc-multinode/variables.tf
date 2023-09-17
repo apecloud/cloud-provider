@@ -51,6 +51,11 @@ variable "instance_types_sysbench" {
   type        = list(string)
 }
 
+variable "instance_types_kube_system" {
+  description = "Default EC2 instance type to provision"
+  type        = list(string)
+}
+
 variable "ami_type" {
   description = "Default EC2 instance to ami"
   type        = string

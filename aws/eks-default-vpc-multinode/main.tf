@@ -48,6 +48,7 @@ locals {
   instance_types_kb_data    = var.instance_types_kb_data
   instance_types_kb_controller  = var.instance_types_kb_controller
   instance_types_sysbench   = var.instance_types_sysbench
+  instance_types_kube_system = var.instance_types_kube_system
   ami_type                  = var.ami_type
   capacity_type             = var.capacity_type
   min_size                  = var.min_size
