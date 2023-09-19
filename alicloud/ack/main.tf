@@ -16,8 +16,8 @@ data "alicloud_cs_cluster_credential" "auth" {
 
 // Available zones for current region
 data "alicloud_zones" "this" {
-  available_instance_type     = var.worker_instance_types.0
-  available_disk_category     = "cloud_efficiency"
+  available_instance_type     = var.worker_instance_types.1
+  available_disk_category     = "cloud_essd"
   available_resource_creation = "VSwitch"
 }
 

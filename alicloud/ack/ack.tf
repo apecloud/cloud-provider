@@ -79,6 +79,7 @@ resource "alicloud_cs_kubernetes_node_pool" "this" {
 
   # System disk type for node, default cloud_efficiency, alternative is cloud_ssd or cloud_essd
   system_disk_category = "cloud_efficiency"
+  system_disk_performance_level = "PL1"
   system_disk_size     = 40
 
   # OS Type
