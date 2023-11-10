@@ -32,6 +32,7 @@ resource "google_container_node_pool" "this" {
   location   = local.zone
   cluster    = google_container_cluster.this.name
   node_count = local.gke_num_nodes
+  node_locations = [ "${local.zone}-a","${local.zone}-b","${local.zone}-c" ]
 
   node_config {
     oauth_scopes = [
