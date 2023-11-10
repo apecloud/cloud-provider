@@ -5,6 +5,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+DEFAULT_ENABLE_SPOT=true
+
 show_help() {
 cat << EOF
 Usage: $(basename "$0") <options>
@@ -19,6 +21,7 @@ Usage: $(basename "$0") <options>
     -ns, --node-size                        Node size
     -nt, --node-type                        Node type
     -cr, --cluster-region                   EKS cluster region
+    -es, --enable-spot                      Enable spot (default: $DEFAULT_ENABLE_SPOT)
 EOF
 }
 
@@ -53,6 +56,10 @@ terraform_init() {
         if [[ ! -z "$NODE_TYPE" ]]; then
             sed -i '' 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
+
+        if [[ ! -z "$ENABLE_SPOT" ]]; then
+            sed -i '' 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
+        fi
     else
         if [[ ! -z "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
@@ -73,6 +80,10 @@ terraform_init() {
 
         if [[ ! -z "$NODE_TYPE" ]]; then
             sed -i 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
+        fi
+
+        if [[ ! -z "$ENABLE_SPOT" ]]; then
+            sed -i 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
         fi
     fi
 
@@ -101,6 +112,7 @@ main() {
     local NODE_TYPE=""
     local UNAME=`uname -s`
     local CLUSTER_REGION=""
+    local ENABLE_SPOT=$DEFAULT_ENABLE_SPOT
 
     parse_command_line "$@"
 
@@ -157,6 +169,10 @@ parse_command_line() {
             ;;
             -cr|--cluster-region)
                 CLUSTER_REGION="$2"
+                shift
+            ;;
+            -es|--enable-spot)
+                ENABLE_SPOT="$2"
                 shift
             ;;
             *)
