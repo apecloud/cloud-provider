@@ -6,6 +6,7 @@ set -o nounset
 set -o pipefail
 
 DEFAULT_ENABLE_SPOT=true
+DEFAULT_DISK_SIZE=100
 
 show_help() {
 cat << EOF
@@ -22,6 +23,7 @@ Usage: $(basename "$0") <options>
     -nt, --node-type                        Node type
     -cr, --cluster-region                   EKS cluster region
     -es, --enable-spot                      Enable spot (default: $DEFAULT_ENABLE_SPOT)
+    -ds, --disk-size                        Disk size (default: $DEFAULT_DISK_SIZE)
 EOF
 }
 
@@ -60,6 +62,10 @@ terraform_init() {
         if [[ ! -z "$ENABLE_SPOT" ]]; then
             sed -i '' 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
         fi
+
+        if [[ ! -z "$DISK_SIZE" ]]; then
+            sed -i '' 's/^disk_size_gb.*/disk_size_gb = '$DISK_SIZE'/' terraform.tfvars
+        fi
     else
         if [[ ! -z "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
@@ -84,6 +90,10 @@ terraform_init() {
 
         if [[ ! -z "$ENABLE_SPOT" ]]; then
             sed -i 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
+        fi
+
+        if [[ ! -z "$DISK_SIZE" ]]; then
+            sed -i 's/^disk_size_gb.*/disk_size_gb = '$DISK_SIZE'/' terraform.tfvars
         fi
     fi
 
@@ -113,6 +123,7 @@ main() {
     local UNAME=`uname -s`
     local CLUSTER_REGION=""
     local ENABLE_SPOT=$DEFAULT_ENABLE_SPOT
+    local DISK_SIZE=$DEFAULT_DISK_SIZE
 
     parse_command_line "$@"
 
@@ -173,6 +184,10 @@ parse_command_line() {
             ;;
             -es|--enable-spot)
                 ENABLE_SPOT="$2"
+                shift
+            ;;
+            -ds|--disk-size)
+                DISK_SIZE="$2"
                 shift
             ;;
             *)
