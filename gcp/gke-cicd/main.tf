@@ -35,6 +35,7 @@ locals {
   region                    = var.region
   zone                      = var.zone
   gke_num_nodes             = var.gke_num_nodes
+  disk_type                 = var.disk_type
   disk_size_gb              = var.disk_size_gb
   machine_type              = var.machine_type
   spot                      = var.spot
