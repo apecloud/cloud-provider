@@ -30,6 +30,12 @@ variable "gke_num_nodes" {
   }
 }
 
+variable "disk_type" {
+  description = "Boot disk type, can be either pd-ssd, local-ssd, or pd-standard"
+  type        = string
+  default     = "pd-standard"
+}
+
 variable "disk_size_gb" {
   type        = number
   description = "disk size gb of gke nodes"
