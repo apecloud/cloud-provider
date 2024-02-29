@@ -1,8 +1,10 @@
 output "resource_group_name" {
+  description = "Kubernetes Cluster Resource Group Name"
   value = azurerm_resource_group.default.name
 }
 
-output "kubernetes_cluster_name" {
+output "cluster_name" {
+  description = "Kubernetes Cluster Name"
   value = azurerm_kubernetes_cluster.default.name
 }
 
