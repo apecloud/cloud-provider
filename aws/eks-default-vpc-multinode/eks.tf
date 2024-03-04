@@ -11,6 +11,11 @@ module "eks" {
   kms_key_deletion_window_in_days = 7
 
   cluster_enabled_log_types = local.cluster_enabled_log_types
+  create_cloudwatch_log_group = false
+
+  cluster_tags = {
+     owner = local.owner
+  }
 
   cluster_addons = {
     coredns = {
