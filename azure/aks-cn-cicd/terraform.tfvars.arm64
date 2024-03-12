@@ -1,0 +1,9 @@
+appId    = ""
+password = ""
+cluster_version = "1.27.9"
+cluster_name = ""
+region = "China North 3"
+node_pool_name = "cicdarmpool"
+node_count = 33
+disk_size_gb = 100
+machine_type = "Standard_D4s_v3"
