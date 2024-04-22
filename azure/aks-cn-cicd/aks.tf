@@ -50,6 +50,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "test-pool" {
   node_count            = local.node_count
   os_disk_size_gb       = local.disk_size_gb
   enable_auto_scaling   = true
+  max_count             = 33
+  min_count             = 0
 #  priority              = "Spot" # Spot|Regular
 #  eviction_policy       = "Delete"
 #  spot_max_price        = 0.5 # note: this is the "maximum" price
