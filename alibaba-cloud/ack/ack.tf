@@ -160,6 +160,7 @@ resource "alicloud_cs_kubernetes_node_pool" "terway" {
     category = "cloud_essd"
     # size in GB
     size     = 120
+    performance_level = "PL0"
   }
 }
 
