@@ -44,6 +44,7 @@ module "eks" {
   vpc_id     = data.aws_vpc.default.id
   subnet_ids = data.aws_subnets.private.ids
   cluster_endpoint_public_access = true
+  cluster_enabled_log_types      = []
 
   # Extend cluster security group rules
   cluster_security_group_additional_rules = {
