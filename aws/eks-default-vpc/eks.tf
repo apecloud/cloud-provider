@@ -10,7 +10,7 @@ module "eks" {
   create_kms_key                  = true
   kms_key_deletion_window_in_days = 7
 
-  cluster_enabled_log_types = local.cluster_enabled_log_types
+  #cluster_enabled_log_types = local.cluster_enabled_log_types
   create_cloudwatch_log_group = false
 
   cluster_tags = {
