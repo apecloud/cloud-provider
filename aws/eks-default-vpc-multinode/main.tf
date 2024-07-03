@@ -43,7 +43,7 @@ locals {
   dns_suffix                = data.aws_partition.current.dns_suffix
   cluster_role_name         = coalesce(var.cluster_role_name, "${local.cluster_name}-cluster-role")
   node_group_role_name      = coalesce(var.node_group_role_name, "${local.cluster_name}-node-group-role")
-  azs                       = slice(data.aws_availability_zones.available.names, 0, 1)
+  azs                       = slice(data.aws_availability_zones.available.names, 0, 3)
   cluster_enabled_log_types = var.cluster_enabled_log_types
   instance_types_kb_data    = var.instance_types_kb_data
   instance_types_kb_controller  = var.instance_types_kb_controller
