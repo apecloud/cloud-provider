@@ -88,7 +88,7 @@ locals {
   node_group_role_name    = "${local.cluster_name}-managed-node-role"
   cluster_admin_role_name = "${local.cluster_name}-admin-role"
 
-  cluster_version = "1.25"
+  cluster_version = "1.30"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
