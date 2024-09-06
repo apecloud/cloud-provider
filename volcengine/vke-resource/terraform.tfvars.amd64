@@ -1,0 +1,10 @@
+access_key = ""
+secret_key = ""
+cluster_version = "1.28"
+cluster_name = ""
+region = "cn-shanghai"
+node_pool_name = "cicd-node-pool-amd64"
+node_count = 33
+node_count_max = 34
+volume_size = 100
+machine_type = ["ecs.g2a.xlarge"]
