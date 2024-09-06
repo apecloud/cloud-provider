@@ -175,7 +175,7 @@ parse_command_line() {
                 INSTANCE_TYPE="$2"
                 shift
             ;;
-            -cn|--cluster-name )
+            -cn|--cluster-name)
                 CLUSTER_NAME="$2"
                 shift
             ;;
