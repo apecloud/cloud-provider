@@ -1,24 +1,19 @@
 provider "volcengine" {
-  region     = local.region # 容器服务业务所在的地域。
-  access_key = local.access_key # 火山引擎账号的 Access Key ID。
-  secret_key = local.secret_key # 火山引擎账号的 Secret Access Key。
+  region     = local.region
+  access_key = local.access_key
+  secret_key = local.secret_key
 }
 
-# data "volcengine_zones" "vke-tf-zones" {
-# }
-
-#创建 VPC
 resource "volcengine_vpc" "vke-tf-vpc" {
-  vpc_name    = "vke-tf-vpc" # 私有网络名称。
-  cidr_block  = "172.16.0.0/16" # 私有网络子网网段。
+  vpc_name    = "vke-tf-vpc"
+  cidr_block  = "172.16.0.0/16"
 }
 
-#创建 Virtual Switch（VSW）
 resource "volcengine_subnet" "vke-tf-vsw" {
-  subnet_name = "vke-tf-vsw-1" # VSW 子网名称。
-  cidr_block  = "172.16.0.0/24" # VSW 子网网段。
-  zone_id     = "${local.region}-a" # VSW 可用区。
-  vpc_id      = volcengine_vpc.vke-tf-vpc.id # VSW 所属私有网络 ID。
+  subnet_name = "vke-tf-vsw-1"
+  cidr_block  = "172.16.0.0/24"
+  zone_id     = "${local.region}-a"
+  vpc_id      = volcengine_vpc.vke-tf-vpc.id
 }
 
 resource "volcengine_security_group" "vke-tf-security-group" {
@@ -30,41 +25,35 @@ data "volcengine_images" "vke-tf-images" {
   name_regex = "veLinux 1.0 64位"
 }
 
-#创建 VKE 集群
 resource "volcengine_vke_cluster" "vke-tf-cluster" {
-  name                = local.cluster_name # 集群名称。
-  kubernetes_version  = local.cluster_version # 集群的 Kubernetes 版本。当前仅支持写 x.y 版本号，不支持写 x.y.z 版本号。
-  # VKE 支持的 Kubernetes 版本请参见 https://www.volcengine.com/docs/6460/108841 。
-  description         = "VKE cluster created by terraform" # 集群描述。
-  delete_protection_enabled = false # 集群删除保护。true：开启，false：关闭。
+  name                = local.cluster_name
+  kubernetes_version  = local.cluster_version
+  description         = "VKE cluster created by terraform"
+  delete_protection_enabled = false
   cluster_config {
-    subnet_ids = [volcengine_subnet.vke-tf-vsw.id] # 集群子网 ID。
-    api_server_public_access_enabled = true # 开启 API Server 公网访问。true：开启，false：不开启。
-    #配置 API Server 公网 EIP 计费模式及带宽
+    subnet_ids = [volcengine_subnet.vke-tf-vsw.id]
+    api_server_public_access_enabled = true
     api_server_public_access_config {
       public_access_network_config {
-        billing_type    = "PostPaidByTraffic" # EIP 计费模式。PostPaidByTraffic：按量计费-按实际流量计费，PostPaidByBandwidth：按量计费-按带宽上限计费。
-        bandwidth       = 10 # EIP 带宽峰值。PostPaidByTraffic 计费模式下取值范围为 1～200，PostPaidByBandwidth 计费模式下取值范围为 1～500。
+        billing_type    = "PostPaidByTraffic"
+        bandwidth       = 10
       }
     }
-    resource_public_access_default_enabled = true # 开启公网访问。true：开启，false：不开启。
+    resource_public_access_default_enabled = true
   }
 
   pods_config {
-    pod_network_mode = "VpcCniShared"  # 容器网络模型。VpcCniShared：VPC-CNI 网络模型，Flannel：Flannel 网络模型。
-    #当网络模型为 Flannel 时 flannel_config 生效
+    pod_network_mode = "VpcCniShared"
     flannel_config {
-      pod_cidrs = ["192.168.0.0/20"]  # Flannel 模型容器网络的 Pod CIDR。
-      max_pods_per_node = 64  # Flannel 模型容器网络的单节点 Pod 实例数量上限。取值有 64、16、32、128、256。
+      pod_cidrs = ["192.168.0.0/20"]
+      max_pods_per_node = 64
     }
-    #当网络模型为 VpcCniShared 时 vpc_cni_config 生效
     vpc_cni_config {
-      subnet_ids = [volcengine_subnet.vke-tf-vsw.id]  # VPC-CNI 模型容器网络的 Pod 子网 ID。
+      subnet_ids = [volcengine_subnet.vke-tf-vsw.id]
     }
   }
-  #配置集群 service CIDR
   services_config {
-    service_cidrsv4 = ["172.30.0.0/18"]  # 集群内服务使用的 CIDR。
+    service_cidrsv4 = ["172.30.0.0/18"]
   }
   tags {
     key   = "owner"
@@ -79,47 +68,43 @@ resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
     enabled = false
   }
   node_config {
-    name_prefix       = "vke-tf"
-    instance_type_ids = [local.machine_type]  # 节点对应 ECS 实例的规格。
-    subnet_ids = [volcengine_subnet.vke-tf-vsw.id]   # 节点网络所属的子网 ID。
+    instance_type_ids = [local.machine_type]
+    subnet_ids = [volcengine_subnet.vke-tf-vsw.id]
     image_id          = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 64位"][0]
-    #系统盘，type 需要所选节点型号支持挂载
     system_volume {
-      type = "ESSD_PL0"  # 云盘类型。ESSD_PL0：PL0 级别极速型 SSD 云盘，ESSD_FlexPL：PL1 级别极速型 SSD 云盘。
-      size = 50  # 云盘容量，单位 GiB。极速型 SSD（ESSD_PL0，ESSD_FlexPL）容量取值范围 40～2048。
+      type = "ESSD_PL0"
+      size = 50
     }
-    #数据盘，type需要所选节点型号能挂载，支持配置自定义挂载点
     data_volumes  {
-      type = "ESSD_PL0"  # 磁盘类型。ESSD_PL0：PL0 级别极速型 SSD 云盘，ESSD_FlexPL：PL1 级别极速型 SSD 云盘。
-      size = 50  # 磁盘容量，单位 GiB。极速型 SSD（ESSD_PL0，ESSD_FlexPL）容量取值范围 40～2048。
+      type = "ESSD_PL0"
+      size = local.volume_size
+      mount_point = "/tf"
     }
     initialize_script = "ZWNobyBoZWxsbyB0ZXJyYWZvcm0h"
     security {
       login {
-        password = "U2VjdXJlUGEkJHcwcmQxMjM0NTY3OA=="  # 节点的访问方式，Root 用户登录密码。使用 Base64 编码格式。
+        password = "U2VjdXJlUGEkJHcwcmQxMjM0NTY3OA=="
       }
       security_strategies = ["Hids"]
       security_group_ids  = [volcengine_security_group.vke-tf-security-group.id]
     }
-    #设置后，第一块数据盘会mount到/mnt/vdb，并挂载/var/lib/containerd和/var/lib/kubelet目录
-    #如设置了自定义挂载点，会mount到自定义挂载点，并挂载/var/lib/containerd和/var/lib/kubelet目录
     additional_container_storage_enabled = true
     instance_charge_type                 = "PostPaid"
-    ecs_tags {   #节点对应 ECS 实例绑定的标签信息，用于搜索、管理 ECS 实例。
+    name_prefix       = "vke-tf"
+    ecs_tags {
       key = "owner"
       value = "huangzhangshu"
     }
   }
 
   kubernetes_config {
-    #配置节点标签（label）
     labels {
       key = "owner"
       value ="huangzhangshu"
     }
-    cordon = false  # 是否封锁节点。true：封锁，false：不封锁。
+    cordon = false
   }
-  tags {  #节点池自定义标签
+  tags {
     key = "owner"
     value = "huangzhangshu"
   }
@@ -136,7 +121,7 @@ resource "volcengine_ecs_instance" "vke-tf-ecs-instance" {
   system_volume_size   = 50
   data_volumes {
     volume_type          = "ESSD_PL0"
-    size                 = 100
+    size                 = local.volume_size
     delete_with_instance = true
   }
   subnet_id          = volcengine_subnet.vke-tf-vsw.id
@@ -163,12 +148,6 @@ data "volcengine_vke_nodes" "vke-tf-nodes" {
   ids = volcengine_vke_node.vke-tf-node[*].id
 }
 
-#resource "volcengine_vke_kubeconfig" "vke-tf-kubeconfig-private" {
-#  cluster_id     = volcengine_vke_cluster.vke-tf-cluster.id
-#  type           = "Private"
-#  valid_duration = 24
-#}
-
 resource "volcengine_vke_kubeconfig" "vke-tf-kubeconfig-public" {
   cluster_id     = volcengine_vke_cluster.vke-tf-cluster.id
   type           = "Public"
@@ -176,6 +155,5 @@ resource "volcengine_vke_kubeconfig" "vke-tf-kubeconfig-public" {
 }
 
 data "volcengine_vke_kubeconfigs" "vke-tf-kubeconfigs" {
-  #ids = [volcengine_vke_kubeconfig.vke-tf-kubeconfig-private.id, volcengine_vke_kubeconfig.vke-tf-kubeconfig-public.id]
   ids = [volcengine_vke_kubeconfig.vke-tf-kubeconfig-public.id]
 }
