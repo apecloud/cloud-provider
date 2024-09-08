@@ -136,10 +136,6 @@ main() {
 
     parse_command_line "$@"
 
-    if [[ -z "$CLUSTER_REGION" ]]; then
-        CLUSTER_REGION="East US"
-    fi
-
     export TF_VAR_region=$CLUSTER_REGION
 
     case $TYPE in

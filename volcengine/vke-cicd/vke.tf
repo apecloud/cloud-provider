@@ -136,7 +136,7 @@ resource "volcengine_ecs_instance" "vke-tf-ecs-instance" {
   system_volume_size   = 50
   data_volumes {
     volume_type          = "ESSD_PL0"
-    size                 = local.volume_size
+    size                 = 100
     delete_with_instance = true
   }
   subnet_id          = volcengine_subnet.vke-tf-vsw.id
