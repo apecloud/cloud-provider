@@ -3,6 +3,11 @@ output "cluster_name" {
   description = "The name of the VKE cluster."
 }
 
+#output "cluster_id" {
+#  value = volcengine_vke_cluster.vke-tf-cluster.id
+#  description = "The name of the VKE cluster id."
+#}
+
 #output "kubeconfig_private" {
 #  value = volcengine_vke_kubeconfig.vke-tf-kubeconfig-private
 #}

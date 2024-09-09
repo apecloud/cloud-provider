@@ -12,7 +12,7 @@ resource "volcengine_vpc" "vke-tf-vpc" {
 resource "volcengine_subnet" "vke-tf-vsw" {
   subnet_name = "vke-tf-vsw-${local.name}"
   cidr_block  = "172.16.0.0/24"
-  zone_id     = "${local.region}a"
+  zone_id     = "${local.region_zone}"
   vpc_id      = volcengine_vpc.vke-tf-vpc.id
 }
 
@@ -22,7 +22,7 @@ resource "volcengine_security_group" "vke-tf-security-group" {
 }
 
 data "volcengine_images" "vke-tf-images" {
-  name_regex = "veLinux 1.0 CentOS Compatible"
+  name_regex = "veLinux 1.0 CentOS Compatible 64 bit"
 }
 
 resource "volcengine_vke_cluster" "vke-tf-cluster" {
@@ -70,7 +70,7 @@ resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
   node_config {
     instance_type_ids = [local.machine_type]
     subnet_ids = [volcengine_subnet.vke-tf-vsw.id]
-    image_id          = data.volcengine_images.vke-tf-images.images[0].image_id
+    image_id          = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS Compatible 64 bit"][0]
     system_volume {
       type = "ESSD_PL0"
       size = 50
@@ -113,7 +113,7 @@ resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
 resource "volcengine_ecs_instance" "vke-tf-ecs-instance" {
   instance_name        = "vke-tf-ecs-instance-${local.name}-${count.index}"
   host_name            = "vke-tf-ecs-instance-${local.name}"
-  image_id             = data.volcengine_images.vke-tf-images.images[0].image_id
+  image_id             = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS Compatible 64 bit"][0]
   instance_type        = local.machine_type
   password             = "93f0cb0614Aab12"
   instance_charge_type = "PostPaid"
@@ -158,18 +158,3 @@ data "volcengine_vke_kubeconfigs" "vke-tf-kubeconfigs" {
   ids = [volcengine_vke_kubeconfig.vke-tf-kubeconfig-public.id]
 }
 
-resource "volcengine_vke_addon" "vke-tf-addon-core-dns" {
-  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
-  name             = "core-dns"
-  version          = "1.10.1-vke.400"
-  deploy_node_type = "Node"
-  deploy_mode      = "Unmanaged"
-}
-
-resource "volcengine_vke_addon" "vke-tf-addon-csi-ebs" {
-  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
-  name             = "csi-ebs"
-  version          = " v1.2.4"
-  deploy_node_type = "Node"
-  deploy_mode      = "Unmanaged"
-}

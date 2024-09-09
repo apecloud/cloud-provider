@@ -11,6 +11,11 @@ variable "region" {
   type        = string
 }
 
+variable "region_zone" {
+  description = "vke region zone"
+  type        = string
+}
+
 variable "cluster_version" {
   description = "vke cluster version"
   type        = string

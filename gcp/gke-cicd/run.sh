@@ -38,61 +38,61 @@ terraform_init() {
     fi
 
     if [[ "$UNAME" == "Darwin" ]]; then
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i '' 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i '' 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i '' 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
             sed -i '' 's/^zone.*/zone = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i '' 's/^gke_num_nodes.*/gke_num_nodes = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i '' 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$ENABLE_SPOT" ]]; then
+        if [[ -n "$ENABLE_SPOT" ]]; then
             sed -i '' 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$DISK_SIZE" ]]; then
+        if [[ -n "$DISK_SIZE" ]]; then
             sed -i '' 's/^disk_size_gb.*/disk_size_gb = '$DISK_SIZE'/' terraform.tfvars
         fi
     else
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
             sed -i 's/^zone.*/zone = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i 's/^gke_num_nodes.*/gke_num_nodes = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$ENABLE_SPOT" ]]; then
+        if [[ -n "$ENABLE_SPOT" ]]; then
             sed -i 's/^spot.*/spot = '$ENABLE_SPOT'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$DISK_SIZE" ]]; then
+        if [[ -n "$DISK_SIZE" ]]; then
             sed -i 's/^disk_size_gb.*/disk_size_gb = '$DISK_SIZE'/' terraform.tfvars
         fi
     fi

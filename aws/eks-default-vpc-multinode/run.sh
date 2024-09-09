@@ -33,47 +33,47 @@ terraform_init() {
     fi
 
     if [[ "$UNAME" == "Darwin" ]]; then
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i '' 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i '' 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i '' 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i '' 's/^min_size.*/min_size = '$NODE_SIZE'/' terraform.tfvars
             sed -i '' 's/^max_size.*/max_size = '$NODE_SIZE'/' terraform.tfvars
             sed -i '' 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i '' 's/^instance_types_kb_data.*/instance_types_kb_data = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     else
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i 's/^region.*/region = "'$CLUSTER_REGION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i 's/^min_size.*/min_size = '$NODE_SIZE'/' terraform.tfvars
             sed -i 's/^max_size.*/max_size = '$NODE_SIZE'/' terraform.tfvars
             sed -i 's/^desired_size.*/desired_size = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i 's/^instance_types_kb_data.*/instance_types_kb_data = ["'$NODE_TYPE'"]/' terraform.tfvars
         fi
     fi

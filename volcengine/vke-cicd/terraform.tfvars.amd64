@@ -3,6 +3,7 @@ secret_key = ""
 cluster_version = "1.28"
 cluster_name = ""
 region = "ap-southeast-1"
+region_zone = "ap-southeast-1a"
 node_pool_name = "cicd-node-pool"
 node_count = 33
 volume_size = 100

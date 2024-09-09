@@ -7,6 +7,7 @@ locals {
   cluster_name              = lower(coalesce(var.cluster_name, local.name))
   cluster_version           = var.cluster_version
   region                    = var.region
+  region_zone               = var.region_zone
   node_pool_name            = var.node_pool_name
   machine_type              = var.machine_type
   volume_size               = var.volume_size

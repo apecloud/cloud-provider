@@ -29,6 +29,11 @@ EOF
 }
 
 terraform_init() {
+    echo "rm addons.tf"
+    if [[ -f "addons.tf" ]]; then
+        rm -rf addons.tf
+    fi
+
     echo "terraform init"
     terraform init
 
@@ -39,67 +44,85 @@ terraform_init() {
     fi
 
     if [[ "$UNAME" == "Darwin" ]]; then
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i '' 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i '' 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i '' "s/^region.*/region = \"${CLUSTER_REGION}\"/" terraform.tfvars
+            zone_tmp="a"
+            if [[ $(( $RANDOM % 2 )) == 0 ]]; then
+                zone_tmp="b"
+            fi
+            region_zone="${CLUSTER_REGION}-${zone_tmp}"
+            if [[ "$CLUSTER_REGION" == "ap-southeast-"* ]]; then
+                region_zone="${CLUSTER_REGION}${zone_tmp}"
+            fi
+            sed -i '' "s/^region_zone.*/region_zone = \"${region_zone}\"/" terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i '' 's/^node_count.*/node_count = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i '' 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$DISK_SIZE" ]]; then
+        if [[ -n "$DISK_SIZE" ]]; then
             sed -i '' 's/^volume_size.*/volume_size = '$DISK_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$ACCESS_KEY" ]]; then
+        if [[ -n "$ACCESS_KEY" ]]; then
             sed -i '' 's/^access_key.*/access_key = "'$ACCESS_KEY'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$SECRET_KEY" ]]; then
+        if [[ -n "$SECRET_KEY" ]]; then
             sed -i '' 's/^secret_key.*/secret_key = "'$SECRET_KEY'"/' terraform.tfvars
         fi
     else
-        if [[ ! -z "$CLUSTER_VERSION" ]]; then
+        if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_NAME" ]]; then
+        if [[ -n "$CLUSTER_NAME" ]]; then
             sed -i 's/^cluster_name.*/cluster_name = "'$CLUSTER_NAME'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$CLUSTER_REGION" ]]; then
+        if [[ -n "$CLUSTER_REGION" ]]; then
             sed -i "s/^region.*/region = \"${CLUSTER_REGION}\"/" terraform.tfvars
+            zone_tmp="a"
+            if [[ $(( $RANDOM % 2 )) == 0 ]]; then
+                zone_tmp="b"
+            fi
+            region_zone="${CLUSTER_REGION}-${zone_tmp}"
+            if [[ "$CLUSTER_REGION" == "ap-southeast-"* ]]; then
+                region_zone="${CLUSTER_REGION}${zone_tmp}"
+            fi
+            sed -i "s/^region_zone.*/region_zone = \"${region_zone}\"/" terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_SIZE" ]]; then
+        if [[ -n "$NODE_SIZE" ]]; then
             sed -i 's/^node_count.*/node_count = '$NODE_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$NODE_TYPE" ]]; then
+        if [[ -n "$NODE_TYPE" ]]; then
             sed -i 's/^machine_type.*/machine_type = "'$NODE_TYPE'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$DISK_SIZE" ]]; then
+        if [[ -n "$DISK_SIZE" ]]; then
             sed -i 's/^volume_size.*/volume_size = '$DISK_SIZE'/' terraform.tfvars
         fi
 
-        if [[ ! -z "$ACCESS_KEY" ]]; then
+        if [[ -n "$ACCESS_KEY" ]]; then
             sed -i 's/^access_key.*/access_key = "'$ACCESS_KEY'"/' terraform.tfvars
         fi
 
-        if [[ ! -z "$SECRET_KEY" ]]; then
+        if [[ -n "$SECRET_KEY" ]]; then
             sed -i 's/^secret_key.*/secret_key = "'$SECRET_KEY'"/' terraform.tfvars
         fi
     fi
@@ -109,9 +132,38 @@ terraform_init() {
 
     echo "terraform apply volcengine_vke"
     terraform apply volcengine_vke
+
+    touch addons.tf
+    tee addons.tf << EOF
+resource "volcengine_vke_addon" "vke-tf-addon-core-dns" {
+  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
+  name             = "core-dns"
+  version          = "1.10.1-vke.400"
+  deploy_node_type = "Node"
+  deploy_mode      = "Unmanaged"
+}
+
+resource "volcengine_vke_addon" "vke-tf-addon-csi-ebs" {
+  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
+  name             = "csi-ebs"
+  version          = "v1.2.4"
+  deploy_node_type = "Node"
+  deploy_mode      = "Unmanaged"
+}
+EOF
+
+    echo "terraform plan -out volcengine_vke"
+    terraform plan -out volcengine_vke
+
+    echo "terraform apply volcengine_vke"
+    terraform apply volcengine_vke
+
 }
 
 terraform_destroy() {
+    echo "terraform state rm core-dns"
+    echo "$(terraform state rm volcengine_vke_addon.vke-tf-addon-core-dns)"
+
     echo "terraform init"
     terraform init
 
