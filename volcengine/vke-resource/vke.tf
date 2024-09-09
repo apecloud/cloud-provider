@@ -6,22 +6,20 @@ provider "volcengine" {
 
 #创建 VPC
 resource "volcengine_vpc" "vke-tf-vpc" {
-  vpc_name    = "vke-tf-vpc" # 私有网络名称。
+  vpc_name    = "vke-tf-vpc-${local.name}" # 私有网络名称。
   cidr_block  = "172.16.0.0/16" # 私有网络子网网段。
 }
 
 #创建 Virtual Switch（VSW）
 resource "volcengine_subnet" "vke-tf-vsw" {
-  subnet_name = "vke-tf-vsw-1" # VSW 子网名称。
+  subnet_name = "vke-tf-vsw-${local.name}" # VSW 子网名称。
   cidr_block  = "172.16.0.0/24" # VSW 子网网段。
-  zone_id     = "${local.region}-a" # VSW 可用区。
+  zone_id     = "${local.region}a" # VSW 可用区。
   vpc_id      = volcengine_vpc.vke-tf-vpc.id # VSW 所属私有网络 ID。
 }
 
-
-
 #创建 VKE 集群
-resource "volcengine_vke_cluster" "vke-cicd-test" {
+resource "volcengine_vke_cluster" "vke-tf-cluster" {
   name                = local.cluster_name # 集群名称。
   kubernetes_version  = local.cluster_version # 集群的 Kubernetes 版本。当前仅支持写 x.y 版本号，不支持写 x.y.z 版本号。
   # VKE 支持的 Kubernetes 版本请参见 https://www.volcengine.com/docs/6460/108841 。
@@ -59,9 +57,9 @@ resource "volcengine_vke_cluster" "vke-cicd-test" {
 
 }
 
-resource "volcengine_vke_node_pool" "node-pool-cicd-test" {
-  cluster_id = volcengine_vke_cluster.vke-cicd-test.id
-  name = local.node_pool_name
+resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
+  cluster_id = volcengine_vke_cluster.vke-tf-cluster.id
+  name = "${local.node_pool_name}-${local.name}"
   node_config {
     instance_type_ids = [local.machine_type]  # 节点对应 ECS 实例的规格。
     subnet_ids = [volcengine_subnet.vke-tf-vsw.id]   # 节点网络所属的子网 ID。
@@ -90,7 +88,7 @@ resource "volcengine_vke_node_pool" "node-pool-cicd-test" {
     }
   }
   auto_scaling {
-    enabled           = false  # 是否开通节点池弹性。true：开启，false：不开启。
+    enabled           = true  # 是否开通节点池弹性。true：开启，false：不开启。
     max_replicas      = local.node_count + 1  # 节点池的最大节点数。
     min_replicas      = local.node_count  # 节点池的最小节点数。
     desired_replicas  = local.node_count  # 节点池的期望节点数。
@@ -111,15 +109,30 @@ resource "volcengine_vke_node_pool" "node-pool-cicd-test" {
   }
 }
 
-
-resource "volcengine_vke_kubeconfig" "vke-cicd-test-kubeconfig-private" {
-  cluster_id     = volcengine_vke_cluster.vke-cicd-test.id
+resource "volcengine_vke_kubeconfig" "vke-tf-cluster-kubeconfig-private" {
+  cluster_id     = volcengine_vke_cluster.vke-tf-cluster.id
   type           = "Private"
   valid_duration = 24
 }
 
-resource "volcengine_vke_kubeconfig" "vke-cicd-test-kubeconfig-public" {
-  cluster_id     = volcengine_vke_cluster.vke-cicd-test.id
+resource "volcengine_vke_kubeconfig" "vke-tf-cluster-kubeconfig-public" {
+  cluster_id     = volcengine_vke_cluster.vke-tf-cluster.id
   type           = "Public"
   valid_duration = 24
+}
+
+resource "volcengine_vke_addon" "vke-tf-cluster-addon-core-dns" {
+  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
+  name             = "core-dns"
+  version          = "1.10.1-vke.400"
+  deploy_node_type = "Node"
+  deploy_mode      = "Unmanaged"
+}
+
+resource "volcengine_vke_addon" "vke-tf-cluster-addon-csi-ebs" {
+  cluster_id       = volcengine_vke_cluster.vke-tf-cluster.id
+  name             = "csi-ebs"
+  version          = " v1.2.4"
+  deploy_node_type = "Node"
+  deploy_mode      = "Unmanaged"
 }
