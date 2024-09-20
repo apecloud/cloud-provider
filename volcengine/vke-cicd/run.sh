@@ -58,11 +58,11 @@ terraform_init() {
             if [[ $(( $RANDOM % 2 )) == 0 ]]; then
                 zone_tmp="b"
             fi
-            region_zone="${CLUSTER_REGION}-${zone_tmp}"
+            zone="${CLUSTER_REGION}-${zone_tmp}"
             if [[ "$CLUSTER_REGION" == "ap-southeast-"* ]]; then
-                region_zone="${CLUSTER_REGION}${zone_tmp}"
+                zone="${CLUSTER_REGION}${zone_tmp}"
             fi
-            sed -i '' "s/^region_zone.*/region_zone = \"${region_zone}\"/" terraform.tfvars
+            sed -i '' "s/^zone.*/zone = \"${zone}\"/" terraform.tfvars
         fi
 
         if [[ -n "$NODE_SIZE" ]]; then
@@ -99,11 +99,11 @@ terraform_init() {
             if [[ $(( $RANDOM % 2 )) == 0 ]]; then
                 zone_tmp="b"
             fi
-            region_zone="${CLUSTER_REGION}-${zone_tmp}"
+            zone="${CLUSTER_REGION}-${zone_tmp}"
             if [[ "$CLUSTER_REGION" == "ap-southeast-"* ]]; then
-                region_zone="${CLUSTER_REGION}${zone_tmp}"
+                zone="${CLUSTER_REGION}${zone_tmp}"
             fi
-            sed -i "s/^region_zone.*/region_zone = \"${region_zone}\"/" terraform.tfvars
+            sed -i "s/^zone.*/zone = \"${zone}\"/" terraform.tfvars
         fi
 
         if [[ -n "$NODE_SIZE" ]]; then

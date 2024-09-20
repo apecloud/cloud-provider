@@ -14,7 +14,7 @@ resource "volcengine_vpc" "vke-tf-vpc" {
 resource "volcengine_subnet" "vke-tf-vsw" {
   subnet_name = "vke-tf-vsw-${local.name}" # VSW 子网名称。
   cidr_block  = "172.16.0.0/24" # VSW 子网网段。
-  zone_id     = "${local.region_zone}" # VSW 可用区。
+  zone_id     = "${local.zone}" # VSW 可用区。
   vpc_id      = volcengine_vpc.vke-tf-vpc.id # VSW 所属私有网络 ID。
 }
 

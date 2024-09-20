@@ -12,7 +12,7 @@ resource "volcengine_vpc" "vke-tf-vpc" {
 resource "volcengine_subnet" "vke-tf-vsw" {
   subnet_name = "vke-tf-vsw-${local.name}"
   cidr_block  = "172.16.0.0/24"
-  zone_id     = "${local.region_zone}"
+  zone_id     = "${local.zone}"
   vpc_id      = volcengine_vpc.vke-tf-vpc.id
 }
 

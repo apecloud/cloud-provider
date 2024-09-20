@@ -11,7 +11,7 @@ variable "region" {
   type        = string
 }
 
-variable "region_zone" {
+variable "zone" {
   description = "vke region zone"
   type        = string
 }
