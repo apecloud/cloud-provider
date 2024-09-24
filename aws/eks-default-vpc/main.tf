@@ -26,10 +26,10 @@ data "aws_subnets" "private" {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
-  filter {
-    name   = "default-for-az"
-    values = ["true"]
-  }
+  #filter {
+  #  name   = "default-for-az"
+  #  values = ["true"]
+  #}
 }
 
 
