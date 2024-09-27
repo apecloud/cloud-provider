@@ -15,6 +15,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 # If a new VPC is desired, please disable these two queries and enable the vpc module.
 data "aws_vpc" "default" {
@@ -108,6 +109,7 @@ resource "aws_iam_role" "eks_cluster" {
   force_detach_policies = true
   managed_policy_arns = [
     "arn:${local.partition}:iam::aws:policy/AmazonEKSClusterPolicy",
+    "arn:${local.partition}:iam::aws:policy/AmazonEKSServicePolicy",
     "arn:${local.partition}:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
   ]
 

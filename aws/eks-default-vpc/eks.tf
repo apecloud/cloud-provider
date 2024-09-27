@@ -9,9 +9,10 @@ module "eks" {
   // KMS
   # create_kms_key                  = true
   # kms_key_deletion_window_in_days = 7
-  create_kms_key                  = false
+  create_kms_key                    = false
   cluster_encryption_config = {
-    resources    = [""]
+    resources        = ["secrets"]
+    provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
   }
 
   #cluster_enabled_log_types = local.cluster_enabled_log_types

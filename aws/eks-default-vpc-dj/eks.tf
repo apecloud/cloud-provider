@@ -9,9 +9,10 @@ module "eks" {
   // KMS
   # create_kms_key                  = true
   # kms_key_deletion_window_in_days = 7
-  create_kms_key                  = false
+  create_kms_key                    = false
   cluster_encryption_config = {
-    resources    = [""]
+    resources        = ["secrets"]
+    provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
   }
 
   #cluster_enabled_log_types = local.cluster_enabled_log_types
@@ -109,7 +110,7 @@ module "eks" {
       ami_type = local.ami_type # AL2_ARM_64,AL2_x86_64
       instance_types = local.instance_types  # t4g.medium,t3a.medium
       capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-      subnet_ids = "ap-northeast-1c"
+      subnet_ids     = [ "subnet-004ef48e24d1396ca" ]
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
 

@@ -683,6 +683,8 @@ resource "aws_iam_role" "eks_cluster" {
   force_detach_policies = true
   managed_policy_arns = [
     "arn:${local.partition}:iam::aws:policy/AmazonEKSClusterPolicy"
+    "arn:${local.partition}:iam::aws:policy/AmazonEKSServicePolicy",
+    "arn:${local.partition}:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
   ]
 
   # inline_policy {
