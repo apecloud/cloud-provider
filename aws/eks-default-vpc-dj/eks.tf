@@ -102,14 +102,14 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    kb-data = {
-      name = "kb-data-node-group-${local.node_group_name}"
+    one = {
+      name = local.node_group_name
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_kb_data # m5a.xlarge,m6g.xlarge
+      ami_type = local.ami_type # AL2_ARM_64,AL2_x86_64
+      instance_types = local.instance_types  # t4g.medium,t3a.medium
       capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
+      subnet_ids = "ap-northeast-1c"
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
 
@@ -120,135 +120,12 @@ module "eks" {
          max_unavailable_percentage = 33
       }
 
-      labels = {
-         kb-data   = "true"
-      }
-
-      taints = [
-        {
-         key    = "kb-data"
-         value  = "true"
-         effect = "NO_SCHEDULE"
-        }
-      ]
-
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
-
       block_device_mappings = [
         {
           device_name = "/dev/xvda"
           ebs = {
             volume_type = "gp3"
             volume_size = local.volume_size
-          }
-        }
-      ]
-    },
-    kb-controller = {
-      name = "kb-controller-node-group-${local.node_group_name}"
-      use_name_prefix = false
-
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_kb_controller # m5a.xlarge,m6g.xlarge
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-
-      create_iam_role = false
-      iam_role_arn    = aws_iam_role.managed_ng.arn
-
-      min_size     = 1
-      max_size     = 1
-      desired_size = 1
-
-      labels = {
-         kb-controller = "true"
-      }
-
-      taints = [
-        {
-         key    = "kb-controller"
-         value  = "true"
-         effect = "NO_SCHEDULE"
-        }
-      ]
-
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
-
-      block_device_mappings = [
-        {
-          device_name = "/dev/xvda"
-          ebs = {
-            volume_type = "gp3"
-            volume_size = 40
-          }
-        }
-      ]
-    },
-    sysbench = {
-      name = "sysbench-node-group-${local.node_group_name}"
-      use_name_prefix = false
-
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_sysbench  # m5a.xlarge,m6g.xlarge
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-
-      create_iam_role = false
-      iam_role_arn    = aws_iam_role.managed_ng.arn
-
-      min_size     = 1
-      max_size     = 1
-      desired_size = 1
-
-      labels = {
-         sysbench  = "true"
-      }
-
-      taints = [
-        {
-         key    = "sysbench"
-         value  = "true"
-         effect = "NO_SCHEDULE"
-        }
-      ]
-
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
-
-      block_device_mappings = [
-        {
-          device_name = "/dev/xvda"
-          ebs = {
-            volume_type = "gp3"
-            volume_size = 40
-          }
-        }
-      ]
-    },
-    kube-system = {
-      name = "kube-system-node-group-${local.node_group_name}"
-      use_name_prefix = false
-
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_kube_system # t3a.medium,t4g.medium
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-
-      create_iam_role = false
-      iam_role_arn    = aws_iam_role.managed_ng.arn
-
-      min_size     = 1
-      max_size     = 1
-      desired_size = 1
-
-      labels = {
-         kube-system = "true"
-      }
-
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
-
-      block_device_mappings = [
-        {
-          device_name = "/dev/xvda"
-          ebs = {
-            volume_type = "gp3"
-            volume_size = 40
           }
         }
       ]

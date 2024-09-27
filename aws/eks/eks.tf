@@ -7,8 +7,12 @@ module "eks" {
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   // KMS
-  create_kms_key                  = true
-  kms_key_deletion_window_in_days = 7
+  # create_kms_key                  = true
+  # kms_key_deletion_window_in_days = 7
+  create_kms_key                  = false
+  cluster_encryption_config = {
+    resources    = [""]
+  }
 
   cluster_addons = {
     aws-ebs-csi-driver = {

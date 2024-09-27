@@ -1,6 +1,6 @@
-cluster_version = "1.26"
+cluster_version = "1.28"
 cluster_name = ""
-region = "cn-northwest-1"
+region = "us-west-2"
 node_group_name = "cicd-node-group-arm64"
 instance_types = ["t4g.xlarge"]
 ami_type = "AL2_ARM_64"

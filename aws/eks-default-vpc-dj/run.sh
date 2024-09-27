@@ -107,7 +107,7 @@ main() {
     parse_command_line "$@"
 
     if [[ -z "$CLUSTER_REGION" ]]; then
-        CLUSTER_REGION="us-west-2"
+        CLUSTER_REGION="ap-northeast-1"
     fi
 
     export TF_VAR_region=$CLUSTER_REGION
