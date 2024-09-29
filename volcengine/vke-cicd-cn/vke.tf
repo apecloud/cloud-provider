@@ -22,7 +22,7 @@ resource "volcengine_security_group" "vke-tf-security-group" {
 }
 
 data "volcengine_images" "vke-tf-images" {
-  name_regex = "veLinux 1.0 CentOS Compatible 64 bit"
+  name_regex = "veLinux 1.0 CentOS兼容版 64位"
 }
 
 resource "volcengine_vke_cluster" "vke-tf-cluster" {
@@ -70,7 +70,7 @@ resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
   node_config {
     instance_type_ids = [local.machine_type]
     subnet_ids = [volcengine_subnet.vke-tf-vsw.id]
-    image_id          = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS Compatible 64 bit"][0]
+    image_id          = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS兼容版 64位"][0]
     system_volume {
       type = "ESSD_PL0"
       size = 50
@@ -113,7 +113,7 @@ resource "volcengine_vke_node_pool" "vke-tf-node-pool" {
 resource "volcengine_ecs_instance" "vke-tf-ecs-instance" {
   instance_name        = "vke-tf-ecs-instance-${local.name}-${count.index}"
   host_name            = "vke-tf-ecs-instance-${local.name}"
-  image_id             = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS Compatible 64 bit"][0]
+  image_id             = [for image in data.volcengine_images.vke-tf-images.images : image.image_id if image.image_name == "veLinux 1.0 CentOS兼容版 64位"][0]
   instance_type        = local.machine_type
   password             = "93f0cb0614Aab12"
   instance_charge_type = "PostPaid"
