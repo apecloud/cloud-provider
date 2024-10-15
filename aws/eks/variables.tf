@@ -35,7 +35,7 @@ variable "arch" {
 variable "capacity_type" {
   description = "The capacity type of the node group"
   type        = string
-  default     = "ON_DEMAND"    # ON_DEMAND or SPOT
+  default     = "SPOT"    # ON_DEMAND or SPOT
   validation {
     condition     = contains(["ON_DEMAND", "SPOT"], var.capacity_type)
     error_message = "The capacity type must be ON_DEMAND or SPOT."
