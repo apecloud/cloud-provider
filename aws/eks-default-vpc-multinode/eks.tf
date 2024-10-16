@@ -141,6 +141,10 @@ module "eks" {
           ebs = {
             volume_type = "gp3"
             volume_size = local.volume_size
+
+            tags = {
+              owner      = local.owner
+            }
           }
         }
       ]
@@ -184,6 +188,10 @@ module "eks" {
           ebs = {
             volume_type = "gp3"
             volume_size = 40
+
+            tags = {
+              owner      = local.owner
+            }
           }
         }
       ]
@@ -223,6 +231,10 @@ module "eks" {
           ebs = {
             volume_type = "gp3"
             volume_size = 40
+
+            tags = {
+              owner      = local.owner
+            }
           }
         }
       ]
@@ -254,6 +266,10 @@ module "eks" {
           ebs = {
             volume_type = "gp3"
             volume_size = 40
+
+            tags = {
+              owner      = local.owner
+            }
           }
         }
       ]
