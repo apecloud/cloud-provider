@@ -144,6 +144,10 @@ module "eks" {
           }
         }
       ]
+
+      tags = {
+        owner      = local.owner
+      }
     },
     kb-controller = {
       name = "kb-controller-node-group-${local.node_group_name}"

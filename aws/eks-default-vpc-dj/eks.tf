@@ -130,6 +130,10 @@ module "eks" {
           }
         }
       ]
+
+      tags = {
+        owner      = local.owner
+      }
     }
   }
 }
