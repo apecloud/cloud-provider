@@ -61,7 +61,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "test-pool" {
 #  node_labels = {
 #    "kubernetes.azure.com/scalesetpriority" = "spot"
 #  }
-
    node_labels = {
      "owner" = "huangzhangshu"
    }

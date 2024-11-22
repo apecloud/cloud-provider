@@ -13,6 +13,7 @@ resource "azurerm_resource_group" "default" {
 
   tags = {
     environment = "cicd-test"
+    owner = "huangzhangshu"
   }
 }
 
@@ -29,6 +30,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     vm_size         = "Standard_B2s"
     os_disk_size_gb = 50
     enable_auto_scaling = false
+    enable_node_public_ip = true
   }
 
   service_principal {
@@ -40,6 +42,7 @@ resource "azurerm_kubernetes_cluster" "default" {
 
   tags = {
     environment = "cicd-test"
+    owner = "huangzhangshu"
   }
 }
 
@@ -50,6 +53,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "test-pool" {
   node_count            = local.node_count
   os_disk_size_gb       = local.disk_size_gb
   enable_auto_scaling   = true
+  enable_node_public_ip = true
   max_count             = 33
   min_count             = 0
 #  priority              = "Spot" # Spot|Regular
@@ -58,4 +62,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "test-pool" {
 #  node_labels = {
 #    "kubernetes.azure.com/scalesetpriority" = "spot"
 #  }
+
+   node_labels = {
+     "owner" = "huangzhangshu"
+   }
+
+  tags = {
+    environment = "cicd-test"
+    owner = "huangzhangshu"
+  }
 }
