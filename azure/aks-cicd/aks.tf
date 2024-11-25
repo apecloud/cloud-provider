@@ -29,7 +29,6 @@ resource "azurerm_kubernetes_cluster" "default" {
     vm_size         = "Standard_B2s"
     os_disk_size_gb = 50
     enable_auto_scaling = false
-    enable_node_public_ip = true
   }
 
   service_principal {
