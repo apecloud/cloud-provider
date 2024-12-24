@@ -3,7 +3,7 @@ module "eks" {
   version = "19.10.0"
 
   cluster_name                = local.cluster_name
-  cluster_version             = "1.25"
+  cluster_version             = "1.31"
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   // KMS
