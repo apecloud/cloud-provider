@@ -110,7 +110,7 @@ module "eks" {
       ami_type = local.ami_type # AL2_ARM_64,AL2_x86_64
       instance_types = local.instance_types  # t4g.medium,t3a.medium
       capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
+      # subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
 
