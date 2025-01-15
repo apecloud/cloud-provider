@@ -12,7 +12,7 @@ module "eks" {
   create_kms_key                    = false
   cluster_encryption_config = {
     resources        = ["secrets"]
-    provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
+    provider_key_arn = "arn:${local.partition}:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
   }
 
   #cluster_enabled_log_types = local.cluster_enabled_log_types
