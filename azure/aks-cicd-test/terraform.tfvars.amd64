@@ -6,4 +6,4 @@ region = "East US"
 node_pool_name = "cicdamdpool"
 node_count = 33
 disk_size_gb = 100
-machine_type = "Standard_D4s_v3"
+machine_type = "Standard_D16s_v3"
