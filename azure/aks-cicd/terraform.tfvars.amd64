@@ -1,7 +1,7 @@
 appId    = ""
 password = ""
 subscription_id = ""
-cluster_version = "1.30"
+cluster_version = "1.32"
 cluster_name = ""
 region = "East US"
 node_pool_name = "cicdamdpool"

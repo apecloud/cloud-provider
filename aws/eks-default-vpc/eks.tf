@@ -28,17 +28,17 @@ module "eks" {
       most_recent = true
     }
 
-    kube-proxy = {
-      most_recent = true
-    }
+#    kube-proxy = {
+#      most_recent = true
+#    }
 
-    vpc-cni = {
-      most_recent              = true
-    }
+#    vpc-cni = {
+#      most_recent              = true
+#    }
 
-    aws-ebs-csi-driver = {
-      most_recent = true
-    }
+#    aws-ebs-csi-driver = {
+#      most_recent = true
+#    }
   }
 
   create_iam_role = false

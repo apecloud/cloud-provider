@@ -1,6 +1,6 @@
 access_key = ""
 secret_key = ""
-cluster_version = "1.28"
+cluster_version = "1.32"
 cluster_name = ""
 region = "ap-southeast-1"
 zone = "ap-southeast-1a"

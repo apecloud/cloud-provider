@@ -1,4 +1,4 @@
-cluster_version = "1.28"
+cluster_version = "1.32"
 cluster_name = ""
 region = "ap-northeast-1"
 node_group_name = "cicd-node-group-arm64"

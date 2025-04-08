@@ -1,4 +1,4 @@
-cluster_version = "1.26"
+cluster_version = ""1.32"
 project = "apecloud-platform-engineering"
 cluster_name = ""
 region = "us-central1"
