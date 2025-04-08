@@ -1,7 +1,8 @@
 # AKS cluster
 provider "azurerm" {
-  skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
+  # skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
   features {}
+  subscription_id = local.subscription_id
 }
 
 resource "random_pet" "prefix" {}
@@ -28,7 +29,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     node_count      = 1
     vm_size         = "Standard_B2s"
     os_disk_size_gb = 50
-    enable_auto_scaling = false
+    auto_scaling_enabled = false
   }
 
   service_principal {
@@ -50,8 +51,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "test-pool" {
   vm_size               = local.machine_type
   node_count            = local.node_count
   os_disk_size_gb       = local.disk_size_gb
-  enable_auto_scaling   = true
-  enable_node_public_ip = true
+  auto_scaling_enabled = true
+  node_public_ip_enabled = true
   max_count             = 33
   min_count             = 0
 #  priority              = "Spot" # Spot|Regular

@@ -6,6 +6,10 @@ variable "password" {
   description = "Azure Kubernetes Service Cluster password"
 }
 
+variable "subscription_id" {
+  description = "Azure Kubernetes Service Cluster subscription id"
+}
+
 variable "region" {
   description = "aks region"
   type        = string

@@ -25,6 +25,7 @@ Usage: $(basename "$0") <options>
     -ds, --disk-size                        Disk size (default: $DEFAULT_DISK_SIZE)
     -ai, --app-id                           Azure appId
     -ap, --app-password                     Azure password
+    -si, --subscription-id                  Azure subscription Id
 EOF
 }
 
@@ -70,6 +71,10 @@ terraform_init() {
         if [[ -n "$APP_PASSWORD" ]]; then
             sed -i '' 's/^password.*/password = "'$APP_PASSWORD'"/' terraform.tfvars
         fi
+
+        if [[ -n "$SUBSCRIPTION_ID" ]]; then
+            sed -i '' 's/^subscription_id.*/subscription_id = "'$SUBSCRIPTION_ID'"/' terraform.tfvars
+        fi
     else
         if [[ -n "$CLUSTER_VERSION" ]]; then
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
@@ -102,6 +107,10 @@ terraform_init() {
         if [[ -n "$APP_PASSWORD" ]]; then
             sed -i 's/^password.*/password = "'$APP_PASSWORD'"/' terraform.tfvars
         fi
+
+        if [[ -n "$SUBSCRIPTION_ID" ]]; then
+            sed -i 's/^subscription_id.*/subscription_id = "'$SUBSCRIPTION_ID'"/' terraform.tfvars
+        fi
     fi
 
     echo "terraform plan -out azure_aks"
@@ -133,6 +142,7 @@ main() {
     local DISK_SIZE=$DEFAULT_DISK_SIZE
     local APP_ID=""
     local APP_PASSWORD=""
+    local SUBSCRIPTION_ID=""
 
     parse_command_line "$@"
 
@@ -201,6 +211,10 @@ parse_command_line() {
             ;;
             -ap|--app-password)
                 APP_PASSWORD="$2"
+                shift
+            ;;
+            -si|--subscription-id)
+                SUBSCRIPTION_ID="$2"
                 shift
             ;;
             *)

@@ -3,6 +3,7 @@
 locals {
   appId                     = var.appId
   password                  = var.password
+  subscription_id           = var.subscription_id
   name                      = "cicd-aks-${random_string.suffix.result}"
   cluster_name              = lower(coalesce(var.cluster_name, local.name))
   cluster_version           = var.cluster_version
