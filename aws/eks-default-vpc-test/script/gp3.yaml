@@ -1,11 +1,12 @@
-kind: StorageClass
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: gp3
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-allowVolumeExpansion: true
-provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
+  name: gp3
 parameters:
   type: gp3
+provisioner: kubernetes.io/aws-ebs
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true

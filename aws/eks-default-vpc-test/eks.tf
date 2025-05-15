@@ -237,6 +237,11 @@ resource "aws_iam_role_policy_attachment" "ec2_container_registry_policy" {
   policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "ec2_full_access_policy" {
+  role       = aws_iam_role.managed_ng.name
+  policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2FullAccess"
+}
+
 resource "aws_eks_node_group" "cicd_node_group" {
   cluster_name    = module.eks.cluster_name
   node_group_name = local.node_group_name
@@ -261,6 +266,7 @@ resource "aws_eks_node_group" "cicd_node_group" {
     aws_iam_role_policy_attachment.eks_worker_node_policy,
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.ec2_container_registry_policy,
+    aws_iam_role_policy_attachment.ec2_full_access_policy,
   ]
 
   tags = {
