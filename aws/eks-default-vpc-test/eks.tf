@@ -242,16 +242,57 @@ resource "aws_iam_role_policy_attachment" "ec2_full_access_policy" {
   policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2FullAccess"
 }
 
+resource "aws_launch_template" "cicd_node_group_lt" {
+     name_prefix = "${local.node_group_name}-lt"
+     instance_type = local.instance_types[0]
+
+     block_device_mappings {
+       device_name = "/dev/xvda"
+       ebs {
+         volume_size = local.volume_size
+         volume_type = "gp3"
+       }
+     }
+
+     network_interfaces {
+       associate_public_ip_address = true
+     }
+
+     tag_specifications {
+       resource_type = "instance"
+       tags = {
+         owner = local.owner
+       }
+     }
+
+     tag_specifications {
+       resource_type = "volume"
+       tags = {
+         owner = local.owner
+       }
+     }
+
+     lifecycle {
+       create_before_destroy = true
+     }
+}
+
 resource "aws_eks_node_group" "cicd_node_group" {
   cluster_name    = module.eks.cluster_name
   node_group_name = local.node_group_name
   ami_type        = local.ami_type # AL2_ARM_64,AL2_x86_64
-  instance_types  = local.instance_types  # t4g.medium,t3a.medium
+  # instance_types  = local.instance_types  # t4g.medium,t3a.medium
   capacity_type   = local.capacity_type # ON_DEMAND or SPOT
   node_role_arn   = aws_iam_role.managed_ng.arn
-  subnet_ids      = data.aws_subnets.private.ids
-  # subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
-  disk_size       = local.volume_size
+  # subnet_ids      = data.aws_subnets.private.ids
+  subnet_ids      = slice(data.aws_subnets.private.ids, 0, 1)
+  # disk_size       = local.volume_size
+
+  launch_template {
+    id      = aws_launch_template.cicd_node_group_lt.id
+    version = "$Default"
+  }
+
   scaling_config {
     desired_size  = local.desired_size
     max_size      = local.max_size
