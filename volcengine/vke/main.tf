@@ -44,8 +44,8 @@ resource "volcengine_vke_cluster" "default" {
     api_server_public_access_enabled = true
     api_server_public_access_config {
       public_access_network_config {
-        billing_type = "PostPaidByBandwidth"
-        bandwidth    = 1
+        billing_type = "PostPaidByTraffic"
+        bandwidth    = 100
       }
     }
     resource_public_access_default_enabled = true
@@ -59,18 +59,13 @@ resource "volcengine_vke_cluster" "default" {
   services_config {
     service_cidrsv4 = ["172.30.0.0/18"]
   }
-  # logging_config {
-  #   log_setups {
-  #     log_type = "KubeApiServer"
-  #     enabled  = true
-  #     log_ttl  = 60
-  #   }
-  #   log_setups {
-  #     log_type = "Etcd"
-  #     enabled  = false
-  #     log_ttl  = 60
-  #   }
-  # }
+  logging_config {
+    log_setups {
+      log_type = "KubeApiServer"
+      enabled  = true
+      log_ttl  = 60
+    }
+  }
   tags {
     key   = "owner"
     value = var.owner
@@ -249,23 +244,4 @@ data "volcengine_vke_kubeconfigs" "default" {
 
 locals {
   kubeconfig = yamldecode(base64decode(data.volcengine_vke_kubeconfigs.default.kubeconfigs[0].kubeconfig))
-}
-
-provider "kubernetes" {
-  host = local.kubeconfig.clusters[0].cluster.server
-
-  client_certificate     = base64decode(local.kubeconfig.users[0].user.client-certificate-data)
-  client_key             = base64decode(local.kubeconfig.users[0].user.client-key-data)
-  cluster_ca_certificate = base64decode(local.kubeconfig.clusters[0].cluster.certificate-authority-data)
-}
-
-resource "kubernetes_annotations" "csi-ebs" {
-  api_version = "storage.k8s.io/v1"
-  kind        = "StorageClass"
-  metadata {
-    name = "ebs-ssd"
-  }
-  annotations = {
-    "storageclass.kubernetes.io/is-default-class" = "true"
-  }
 }
