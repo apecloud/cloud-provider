@@ -41,9 +41,6 @@ terraform_init() {
 
     if [[ "$UNAME" == "Darwin" ]]; then
         if [[ -n "$CLUSTER_VERSION" ]]; then
-            if [[ "$CLUSTER_VERSION" == "1.32" ]]; then
-                CLUSTER_VERSION="1.32.8"
-            fi
             sed -i '' 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
@@ -80,9 +77,6 @@ terraform_init() {
         fi
     else
         if [[ -n "$CLUSTER_VERSION" ]]; then
-            if [[ "$CLUSTER_VERSION" == "1.32" ]]; then
-                CLUSTER_VERSION="1.32.8"
-            fi
             sed -i 's/^cluster_version.*/cluster_version = "'$CLUSTER_VERSION'"/' terraform.tfvars
         fi
 
