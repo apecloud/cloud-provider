@@ -37,14 +37,14 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.10.0"
 
-  cluster_name    = local.cluster_name
-  cluster_version = local.cluster_version
+  cluster_name                = local.cluster_name
+  cluster_version             = local.cluster_version
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   // KMS
   # create_kms_key                  = true
   # kms_key_deletion_window_in_days = 7
-  create_kms_key                    = false
+  create_kms_key = false
   cluster_encryption_config = {
     resources        = ["secrets"]
     provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
@@ -54,7 +54,7 @@ module "eks" {
   create_cloudwatch_log_group = false
 
   cluster_tags = {
-     owner = local.owner
+    owner = local.owner
   }
 
   create_iam_role = false
@@ -62,8 +62,8 @@ module "eks" {
 
   cluster_addons_timeouts = local.addon_timeouts
 
-  vpc_id     = data.aws_vpc.default.id
-  subnet_ids = data.aws_subnets.private.ids
+  vpc_id                         = data.aws_vpc.default.id
+  subnet_ids                     = data.aws_subnets.private.ids
   cluster_endpoint_public_access = true
   cluster_enabled_log_types      = []
 
@@ -140,7 +140,7 @@ data "aws_iam_policy_document" "cluster_assume_role_policy" {
 
     actions = [
       "sts:AssumeRole"
-#      "sts:TagSession"
+      #      "sts:TagSession"
     ]
     principals {
       type        = "Service"
@@ -203,7 +203,7 @@ data "aws_iam_policy_document" "managed_ng_assume_role_policy" {
 
     actions = [
       "sts:AssumeRole"
-#      "sts:TagSession"
+      #      "sts:TagSession"
     ]
     principals {
       type        = "Service"
@@ -218,7 +218,7 @@ resource "aws_iam_role" "managed_ng" {
   assume_role_policy    = data.aws_iam_policy_document.managed_ng_assume_role_policy.json
   path                  = "/"
   force_detach_policies = true
-  tags = local.tags
+  tags                  = local.tags
 }
 
 # Define each policy attachment as a separate resource
@@ -243,49 +243,49 @@ resource "aws_iam_role_policy_attachment" "ec2_full_access_policy" {
 }
 
 resource "aws_launch_template" "cicd_node_group_lt" {
-     name_prefix = "${local.node_group_name}-lt"
-     instance_type = local.instance_types[0]
+  name_prefix   = "${local.node_group_name}-lt"
+  instance_type = local.instance_types[0]
 
-     block_device_mappings {
-       device_name = "/dev/xvda"
-       ebs {
-         volume_size = local.volume_size
-         volume_type = "gp3"
-       }
-     }
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size = local.volume_size
+      volume_type = "gp3"
+    }
+  }
 
-     network_interfaces {
-       associate_public_ip_address = true
-     }
+  network_interfaces {
+    associate_public_ip_address = true
+  }
 
-     tag_specifications {
-       resource_type = "instance"
-       tags = {
-         owner = local.owner
-       }
-     }
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      owner = local.owner
+    }
+  }
 
-     tag_specifications {
-       resource_type = "volume"
-       tags = {
-         owner = local.owner
-       }
-     }
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      owner = local.owner
+    }
+  }
 
-     lifecycle {
-       create_before_destroy = true
-     }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_eks_node_group" "cicd_node_group" {
   cluster_name    = module.eks.cluster_name
   node_group_name = local.node_group_name
-  ami_type        = local.ami_type # AL2_ARM_64,AL2_x86_64
+  ami_type        = local.ami_type # AL2023_ARM_64_STANDARD, AL2023_x86_64_STANDARD
   # instance_types  = local.instance_types  # t4g.medium,t3a.medium
-  capacity_type   = local.capacity_type # ON_DEMAND or SPOT
-  node_role_arn   = aws_iam_role.managed_ng.arn
+  capacity_type = local.capacity_type # ON_DEMAND or SPOT
+  node_role_arn = aws_iam_role.managed_ng.arn
   # subnet_ids      = data.aws_subnets.private.ids
-  subnet_ids      = slice(data.aws_subnets.private.ids, 0, 1)
+  subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
   # disk_size       = local.volume_size
 
   launch_template {
@@ -294,9 +294,9 @@ resource "aws_eks_node_group" "cicd_node_group" {
   }
 
   scaling_config {
-    desired_size  = local.desired_size
-    max_size      = local.max_size
-    min_size      = local.min_size
+    desired_size = local.desired_size
+    max_size     = local.max_size
+    min_size     = local.min_size
   }
 
   update_config {
@@ -311,38 +311,38 @@ resource "aws_eks_node_group" "cicd_node_group" {
   ]
 
   tags = {
-    owner         = local.owner
+    owner = local.owner
   }
 
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "coredns"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "coredns"
   depends_on = [
     aws_eks_node_group.cicd_node_group
   ]
 }
 
 resource "aws_eks_addon" "kube-proxy" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "kube-proxy"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "kube-proxy"
   depends_on = [
     aws_eks_node_group.cicd_node_group
   ]
 }
 
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "vpc-cni"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "vpc-cni"
   depends_on = [
     aws_eks_node_group.cicd_node_group
   ]
 }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "aws-ebs-csi-driver"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "aws-ebs-csi-driver"
   depends_on = [
     aws_eks_node_group.cicd_node_group
   ]
