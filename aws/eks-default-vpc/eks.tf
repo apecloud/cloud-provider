@@ -44,6 +44,9 @@ module "eks" {
   create_iam_role = false
   iam_role_arn    = aws_iam_role.eks_cluster.arn
 
+  enable_irsa              = true
+  openid_connect_audiences = ["sts.amazonaws.com"]
+
   cluster_addons_timeouts = local.addon_timeouts
 
   vpc_id                         = data.aws_vpc.default.id
