@@ -179,7 +179,7 @@ resource "aws_iam_role" "managed_ng" {
   assume_role_policy    = data.aws_iam_policy_document.managed_ng_assume_role_policy.json
   path                  = "/"
   force_detach_policies = true
-  tags = local.tags
+  tags                  = local.tags
 }
 
 # Define each policy attachment as a separate resource
@@ -209,33 +209,50 @@ resource "aws_iam_role_policy_attachment" "ec2_container_ens_csi_driver_policy" 
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "coredns"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "coredns"
   depends_on = [
-    aws_eks_node_group.cicd_node_group
+    module.eks
   ]
 }
 
 resource "aws_eks_addon" "kube-proxy" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "kube-proxy"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "kube-proxy"
   depends_on = [
-    aws_eks_node_group.cicd_node_group
+    module.eks
   ]
 }
 
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "vpc-cni"
+  cluster_name = module.eks.cluster_name
+  addon_name   = "vpc-cni"
   depends_on = [
-    aws_eks_node_group.cicd_node_group
+    module.eks
   ]
 }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
-  cluster_name                = module.eks.cluster_name
-  addon_name                  = "aws-ebs-csi-driver"
+  cluster_name             = module.eks.cluster_name
+  addon_name               = "aws-ebs-csi-driver"
+  service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
   depends_on = [
-    aws_eks_node_group.cicd_node_group
+    module.eks
   ]
+}
+module "ebs_csi_irsa_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~>5.11"
+
+  role_name             = "${local.cluster_name}-ebs-csi-irsa-role"
+  attach_ebs_csi_policy = true
+
+  oidc_providers = {
+    ex = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
+    }
+  }
+
+  tags = local.tags
 }
