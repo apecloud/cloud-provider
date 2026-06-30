@@ -23,10 +23,10 @@ module "eks" {
   }
 
   cluster_addons = {
-    coredns = {
-      preserve    = true
-      most_recent = true
-    }
+    # coredns = {
+    #   preserve    = true
+    #   most_recent = true
+    # }
 
     #    kube-proxy = {
     #      most_recent = true
