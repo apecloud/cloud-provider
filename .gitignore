@@ -6,3 +6,12 @@
 terraform.tfvars
 *.lock.info
 .DS_Store
+
+# claude code
+CLAUDE.md*
+.claude/
+
+# codex
+AGENTS.md*
+plugins/*
+agents/*

@@ -2,14 +2,14 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.10.0"
 
-  cluster_name    = local.cluster_name
-  cluster_version = local.cluster_version
+  cluster_name                = local.cluster_name
+  cluster_version             = local.cluster_version
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   // KMS
   # create_kms_key                  = true
   # kms_key_deletion_window_in_days = 7
-  create_kms_key                    = false
+  create_kms_key = false
   cluster_encryption_config = {
     resources        = ["secrets"]
     provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
@@ -19,7 +19,7 @@ module "eks" {
   create_cloudwatch_log_group = false
 
   cluster_tags = {
-     owner = local.owner
+    owner = local.owner
   }
 
   cluster_addons = {
@@ -33,7 +33,7 @@ module "eks" {
     }
 
     vpc-cni = {
-      most_recent              = true
+      most_recent = true
     }
 
     aws-ebs-csi-driver = {
@@ -46,8 +46,8 @@ module "eks" {
 
   cluster_addons_timeouts = local.addon_timeouts
 
-  vpc_id     = data.aws_vpc.default.id
-  subnet_ids = data.aws_subnets.private.ids
+  vpc_id                         = data.aws_vpc.default.id
+  subnet_ids                     = data.aws_subnets.private.ids
   cluster_endpoint_public_access = true
   cluster_enabled_log_types      = []
 
@@ -99,18 +99,18 @@ module "eks" {
   }
 
   eks_managed_node_group_defaults = {
-    ami_type = "AL2_x86_64"
+    ami_type = "AL2023_x86_64_STANDARD"
   }
 
   eks_managed_node_groups = {
     kb-data = {
-      name = "kb-data-node-group-${local.node_group_name}"
+      name            = "kb-data-node-group-${local.node_group_name}"
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_kb_data # m5a.xlarge,m6g.xlarge
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-      subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
+      ami_type        = local.ami_type               # AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD
+      instance_types  = local.instance_types_kb_data # m5a.xlarge,m6g.xlarge
+      capacity_type   = local.capacity_type          # ON_DEMAND or SPOT
+      subnet_ids      = slice(data.aws_subnets.private.ids, 0, 1)
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
 
@@ -118,18 +118,18 @@ module "eks" {
       max_size     = local.max_size
       desired_size = local.desired_size
       update_config = {
-         max_unavailable_percentage = 33
+        max_unavailable_percentage = 33
       }
 
       labels = {
-         kb-data   = "true"
+        kb-data = "true"
       }
 
       taints = [
         {
-         key    = "kb-data"
-         value  = "true"
-         effect = "NO_SCHEDULE"
+          key    = "kb-data"
+          value  = "true"
+          effect = "NO_SCHEDULE"
         }
       ]
 
@@ -143,23 +143,23 @@ module "eks" {
             volume_size = local.volume_size
 
             tags = {
-              owner      = local.owner
+              owner = local.owner
             }
           }
         }
       ]
 
       tags = {
-        owner      = local.owner
+        owner = local.owner
       }
     },
     kb-controller = {
-      name = "kb-controller-node-group-${local.node_group_name}"
+      name            = "kb-controller-node-group-${local.node_group_name}"
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
+      ami_type       = local.ami_type                     # AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD
       instance_types = local.instance_types_kb_controller # m5a.xlarge,m6g.xlarge
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
+      capacity_type  = local.capacity_type                # ON_DEMAND or SPOT
 
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
@@ -169,14 +169,14 @@ module "eks" {
       desired_size = 1
 
       labels = {
-         kb-controller = "true"
+        kb-controller = "true"
       }
 
       taints = [
         {
-         key    = "kb-controller"
-         value  = "true"
-         effect = "NO_SCHEDULE"
+          key    = "kb-controller"
+          value  = "true"
+          effect = "NO_SCHEDULE"
         }
       ]
 
@@ -190,19 +190,19 @@ module "eks" {
             volume_size = 40
 
             tags = {
-              owner      = local.owner
+              owner = local.owner
             }
           }
         }
       ]
     },
     sysbench = {
-      name = "sysbench-node-group-${local.node_group_name}"
+      name            = "sysbench-node-group-${local.node_group_name}"
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
-      instance_types = local.instance_types_sysbench  # m5a.xlarge,m6g.xlarge
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
+      ami_type       = local.ami_type                # AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD
+      instance_types = local.instance_types_sysbench # m5a.xlarge,m6g.xlarge
+      capacity_type  = local.capacity_type           # ON_DEMAND or SPOT
 
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
@@ -212,14 +212,14 @@ module "eks" {
       desired_size = 1
 
       labels = {
-         sysbench  = "true"
+        sysbench = "true"
       }
 
       taints = [
         {
-         key    = "sysbench"
-         value  = "true"
-         effect = "NO_SCHEDULE"
+          key    = "sysbench"
+          value  = "true"
+          effect = "NO_SCHEDULE"
         }
       ]
 
@@ -233,19 +233,19 @@ module "eks" {
             volume_size = 40
 
             tags = {
-              owner      = local.owner
+              owner = local.owner
             }
           }
         }
       ]
     },
     kube-system = {
-      name = "kube-system-node-group-${local.node_group_name}"
+      name            = "kube-system-node-group-${local.node_group_name}"
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_x86_64,AL2_ARM_64
+      ami_type       = local.ami_type                   # AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD
       instance_types = local.instance_types_kube_system # t3a.medium,t4g.medium
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
+      capacity_type  = local.capacity_type              # ON_DEMAND or SPOT
 
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
@@ -255,7 +255,7 @@ module "eks" {
       desired_size = 1
 
       labels = {
-         kube-system = "true"
+        kube-system = "true"
       }
 
       subnet_ids = slice(data.aws_subnets.private.ids, 0, 1)
@@ -268,7 +268,7 @@ module "eks" {
             volume_size = 40
 
             tags = {
-              owner      = local.owner
+              owner = local.owner
             }
           }
         }

@@ -2,14 +2,14 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.10.0"
 
-  cluster_name    = local.cluster_name
-  cluster_version = local.cluster_version
+  cluster_name                = local.cluster_name
+  cluster_version             = local.cluster_version
   cluster_iam_role_dns_suffix = "amazonaws.com"
 
   // KMS
   # create_kms_key                  = true
   # kms_key_deletion_window_in_days = 7
-  create_kms_key                    = false
+  create_kms_key = false
   cluster_encryption_config = {
     resources        = ["secrets"]
     provider_key_arn = "arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:alias/aws/eks"
@@ -19,7 +19,7 @@ module "eks" {
   create_cloudwatch_log_group = false
 
   cluster_tags = {
-     owner = local.owner
+    owner = local.owner
   }
 
   cluster_addons = {
@@ -33,7 +33,7 @@ module "eks" {
     }
 
     vpc-cni = {
-      most_recent              = true
+      most_recent = true
     }
 
     aws-ebs-csi-driver = {
@@ -46,8 +46,8 @@ module "eks" {
 
   cluster_addons_timeouts = local.addon_timeouts
 
-  vpc_id     = data.aws_vpc.default.id
-  subnet_ids = data.aws_subnets.private.ids
+  vpc_id                         = data.aws_vpc.default.id
+  subnet_ids                     = data.aws_subnets.private.ids
   cluster_endpoint_public_access = true
   cluster_enabled_log_types      = []
 
@@ -99,18 +99,18 @@ module "eks" {
   }
 
   eks_managed_node_group_defaults = {
-    ami_type = "AL2_x86_64"
+    ami_type = "AL2023_x86_64_STANDARD"
   }
 
   eks_managed_node_groups = {
     one = {
-      name = local.node_group_name
+      name            = local.node_group_name
       use_name_prefix = false
 
-      ami_type = local.ami_type # AL2_ARM_64,AL2_x86_64
-      instance_types = local.instance_types  # t4g.medium,t3a.medium
-      capacity_type  = local.capacity_type # ON_DEMAND or SPOT
-      subnet_ids     = [ "subnet-004ef48e24d1396ca" ]
+      ami_type        = local.ami_type       # AL2023_ARM_64_STANDARD, AL2023_x86_64_STANDARD
+      instance_types  = local.instance_types # t4g.medium,t3a.medium
+      capacity_type   = local.capacity_type  # ON_DEMAND or SPOT
+      subnet_ids      = ["subnet-004ef48e24d1396ca"]
       create_iam_role = false
       iam_role_arn    = aws_iam_role.managed_ng.arn
 
@@ -118,7 +118,7 @@ module "eks" {
       max_size     = local.max_size
       desired_size = local.desired_size
       update_config = {
-         max_unavailable_percentage = 33
+        max_unavailable_percentage = 33
       }
 
       block_device_mappings = [
@@ -129,14 +129,14 @@ module "eks" {
             volume_size = local.volume_size
 
             tags = {
-              owner      = local.owner
+              owner = local.owner
             }
           }
         }
       ]
 
       tags = {
-        owner      = local.owner
+        owner = local.owner
       }
     }
   }
