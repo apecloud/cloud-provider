@@ -1,4 +1,4 @@
-cluster_version = "1.33"
+cluster_version = "1.35"
 cluster_name = ""
 region = "cn-northwest-1"
 node_group_name = "arm64"
